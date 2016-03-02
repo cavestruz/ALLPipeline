@@ -39,6 +39,7 @@ Thumbs.db
 ####################
 *.png
 *.fits
+data/
 
 # Emacs Autosave #
 ##################
