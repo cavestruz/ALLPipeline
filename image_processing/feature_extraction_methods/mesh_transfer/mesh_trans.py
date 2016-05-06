@@ -225,7 +225,7 @@ if __name__ == '__main__':
     xr2 = xp2*0.0
 
     for i in xrange(len(xp2)):
-        xr1[i],xr2[i] = pixel_trans(xp1[i],xp2[i],xi1,xi2,g_lensimage,nns)
+        xr1[i],xr2[i] = pixels_trans(xp1[i],xp2[i],xi1,xi2,g_lensimage,nns)
 
     X = np.vstack((xr1,xr2)).T
     #----------------------------------------------------------------------
