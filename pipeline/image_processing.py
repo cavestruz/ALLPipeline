@@ -1,19 +1,9 @@
 import numpy as np
 import copy
 
-class LoadImages:
-    def __init__(self):
-        pass
-
-    def fit(self, filenames, y = None):
-        return self
-
-    def transform(self, filenames):
-        from skimage import io
-        return np.array([io.imread(filename) for filename in filenames])
-
-    def fit_transform(self, filenames, y = None):
-        return self.transform(filenames)
+def load_images(filenames):
+    from skimage import io
+    return [io.imread(filename) for filename in filenames]
 
 class MedianSmooth:
     def __init__(self, radius):
