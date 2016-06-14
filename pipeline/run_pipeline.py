@@ -1,6 +1,8 @@
 import numpy as np
 import glob
+import time
 from sklearn.pipeline import Pipeline
+from sklearn.grid_search import GridSearchCV
 import image_processing
 from sklearn.cross_validation import train_test_split
 from sklearn.linear_model import LogisticRegression
@@ -37,25 +39,65 @@ if __name__ == "__main__":
 
     # Create the pipeline which consists of image
     # processing and a classifier
-    image_processors = [('median_smooth', image_processing.MedianSmooth(5)),
-                        ('hog', image_processing.HOG(orientations = 8,
-                                                     pixels_per_cell = (16, 16),
-                                                     cells_per_block = (1, 1)))]
+    image_processors = [('median_smooth', image_processing.MedianSmooth()),
+                        ('hog', image_processing.HOG())]
     classifier = ('logistic_regression', LogisticRegression())
     estimators = image_processors + [classifier]
     
     pipeline = Pipeline(estimators)
 
+    # Create the grid search with list of parameters
+    # to search
+    param_grid = [{'median_smooth__radius' : (3, 5, 7),
+                   'hog__orientations' : (8, 10),
+                   'hog__pixels_per_cell' : ((8, 8), (16, 16)),
+                   'hog__cells_per_block' : ((1, 1), (3, 3)),
+                   'logistic_regression__C' : (0.5, 1., 2.)
+                   },
+                  {'median_smooth__radius' : (5,),
+                   'hog__orientations' : (8,),
+                   'hog__pixels_per_cell' : ((16, 16),),
+                   'hog__cells_per_block' : ((1, 1),),
+                   'logistic_regression__C' : (0.01, 0.1, 0.5,
+                                               1., 1.5, 2., 3.,
+                                               10.)
+                   }
+                  ]
+
+    grid_search = GridSearchCV(pipeline, param_grid,
+                               n_jobs = -1)
+
     # Train the model on the training set
-    pipeline.fit(X_train, y_train)
-    print "Confusion matrix on training set"
-    print confusion_matrix(pipeline.predict(X_train), y_train)
+    print "Running grid search..."
+    start_time = time.time()
+    grid_search.fit(X_train, y_train)
+    time_taken = time.time() - start_time
+    print "Finished grid search. Took", time_taken, "seconds"
     print
-    print "Score on training set =", pipeline.score(X_train, y_train)
+    print "Best score:", grid_search.best_score_
+    print "Best parameters set:",
+    best_parameters = grid_search.best_estimator_.get_params()
+    param_names = reduce(lambda x, y : x | y,
+                         (p_grid.viewkeys()
+                          for p_grid in param_grid))
+    for param_name in sorted(param_names):
+        print param_name, ":", best_parameters[param_name]
+    print
+
+    print "Scores for each parameter combination:"
+    for grid_score in grid_search.grid_scores_:
+        print grid_score
+    print
+
+    # Show score for training set using best parameters
+    print "Confusion matrix on training set"
+    print confusion_matrix(grid_search.predict(X_train), y_train)
+    print
+    print "Score on training set =", grid_search.score(X_train, y_train)
     print
 
     # Score the test set
     print "Confusion matrix on test set"
-    print confusion_matrix(pipeline.predict(X_test), y_test)
+    print confusion_matrix(grid_search.predict(X_test), y_test)
     print
-    print "Score on test set =", pipeline.score(X_test, y_test)
+    print "Score on test set =", grid_search.score(X_test, y_test)
