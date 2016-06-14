@@ -1,5 +1,6 @@
 import numpy as np
 import glob
+import time
 from sklearn.pipeline import Pipeline
 from sklearn.grid_search import GridSearchCV
 import image_processing
@@ -67,7 +68,12 @@ if __name__ == "__main__":
                                n_jobs = -1)
 
     # Train the model on the training set
+    print "Running grid search..."
+    start_time = time.time()
     grid_search.fit(X_train, y_train)
+    time_taken = time.time() - start_time
+    print "Finished grid search. Took", time_taken, "seconds"
+    print
     print "Best score:", grid_search.best_score_
     print "Best parameters set:",
     best_parameters = grid_search.best_estimator_.get_params()
@@ -76,6 +82,11 @@ if __name__ == "__main__":
                           for p_grid in param_grid))
     for param_name in sorted(param_names):
         print param_name, ":", best_parameters[param_name]
+    print
+
+    print "Scores for each parameter combination:"
+    for grid_score in grid_search.grid_scores_:
+        print grid_score
     print
 
     # Show score for training set using best parameters
