@@ -1,9 +1,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
+
 from skimage.filters import roberts, sobel, scharr, prewitt
+from StrongCNN.IO.read_fits import *
 
 
-image = camera()
+image =get_fits_obj('../../data/lensed/0_all_imgs.fits')
+edge_roberts = roberts(image)
 edge_roberts = roberts(image)
 edge_sobel = sobel(image)
 
@@ -18,3 +21,4 @@ ax1.set_title('Sobel Edge Detection')
 ax1.axis('off')
 
 plt.tight_layout()
+plt.savefig('lensed')

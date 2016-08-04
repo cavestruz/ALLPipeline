@@ -1,0 +1,10 @@
+Figure 1: g_lensimage - 2d gaussian
+
+Figure 2: Initial position of points on grid (before)
+
+Figure 3: Translated position of points (after pixels_trans which uses
+g_lensimage).  g_lensimage is 
+
+Figure 4: Figure 3, but colored by "structure of points?"  Seems to
+pick up clusters of points, but misses the arc!  dbscan picks out
+other blobs, but not the arc.

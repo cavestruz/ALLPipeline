@@ -1,2 +1,2 @@
-python run_pipeline.py "~/../matt/lensing_deep_learning/data/unlensed_output_png/*all*" "~/../matt/lensing_deep_learning/data/lensed_output_png/*all*"
+python run_pipeline.py "/home/babyostrich/Documents/Repos/StrongCNN/data/realistic_data/*_unlensed_*.png" "/home/babyostrich/Documents/Repos/StrongCNN/data/realistic_data/*_lensed_*.png"
  

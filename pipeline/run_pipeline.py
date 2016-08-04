@@ -9,6 +9,10 @@ from sklearn.linear_model import LogisticRegression
 from collections import Counter
 
 def confusion_matrix(predicted, actual):
+    '''
+    | Outputs (what model thinks it is, what it is)
+
+    '''
     predicted, actual = map(np.array, [predicted, actual])
     return Counter(zip(predicted, actual))
 
@@ -48,20 +52,20 @@ if __name__ == "__main__":
 
     # Create the grid search with list of parameters
     # to search
-    param_grid = [{'median_smooth__radius' : (3, 5, 7),
-                   'hog__orientations' : (8, 10),
-                   'hog__pixels_per_cell' : ((8, 8), (16, 16)),
-                   'hog__cells_per_block' : ((1, 1), (3, 3)),
-                   'logistic_regression__C' : (0.5, 1., 2.)
+    param_grid = [{'median_smooth__radius' : (3,),#, 5, 7),
+                   'hog__orientations' : (8,),#, 10),
+                   'hog__pixels_per_cell' : ((8, 8),),#, (16, 16)),
+                   'hog__cells_per_block' : ((1, 1),),#, (3, 3)),
+                   'logistic_regression__C' : (0.1,0.5, 1., 2.,10) #Regularization parameter
                    },
-                  {'median_smooth__radius' : (5,),
-                   'hog__orientations' : (8,),
-                   'hog__pixels_per_cell' : ((16, 16),),
-                   'hog__cells_per_block' : ((1, 1),),
-                   'logistic_regression__C' : (0.01, 0.1, 0.5,
-                                               1., 1.5, 2., 3.,
-                                               10.)
-                   }
+                  # {'median_smooth__radius' : (5,),
+                  #  'hog__orientations' : (8,),
+                  #  'hog__pixels_per_cell' : ((16, 16),),
+                  #  'hog__cells_per_block' : ((1, 1),),
+                  #  'logistic_regression__C' : (0.01, 0.1, 0.5,
+                  #                              1., 1.5, 2., 3.,
+                  #                              10.)
+                  #  }
                   ]
 
     grid_search = GridSearchCV(pipeline, param_grid,
@@ -85,11 +89,17 @@ if __name__ == "__main__":
     print
 
     print "Scores for each parameter combination:"
+
+    #  Splits into a subcycle of something like groups of 3 subsets to
+    #  test out the parameters in the grid and select a final best
+    #  mean.
+    #  http://scikit-learn.org/stable/modules/cross_validation.html
     for grid_score in grid_search.grid_scores_:
         print grid_score
     print
 
     # Show score for training set using best parameters
+    # Confusion matrix is 
     print "Confusion matrix on training set"
     print confusion_matrix(grid_search.predict(X_train), y_train)
     print

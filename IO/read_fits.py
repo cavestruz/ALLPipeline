@@ -22,4 +22,4 @@ def fits_to_png(fitsfile, png_out):
 if __name__ == "__main__" : 
     for fits in glob.glob(sys.argv[1]) :
         pngname = fits[:-4]
-        fits_to_png(fits, pngname+'.png')
+        fits_to_png(fits, pngname+'png')
