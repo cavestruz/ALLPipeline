@@ -1,2 +1,2 @@
-python run_pipeline.py "/home/babyostrich/Documents/Repos/StrongCNN/data/realistic_data/*_unlensed_*.png" "/home/babyostrich/Documents/Repos/StrongCNN/data/realistic_data/*_lensed_*.png"
+python run_pipeline.py "/Users/matt/Camille/Repos/code/StrongCNN/data/realistic_HST_data/5??_unlensed_*.fits" "/Users/matt/Camille/Repos/code/StrongCNN/data/realistic_HST_data/5??_lensed_*.fits"
  

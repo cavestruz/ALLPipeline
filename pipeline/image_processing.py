@@ -4,8 +4,8 @@ from sklearn.base import BaseEstimator
 
 def load_images(filenames):
     '''Expects filenames to be a list of .fits file locations'''
-    from astropy.io.fits import pyfits
-    return [pyfits.getdata(filename) for filename in filenames]
+    from astropy.io.fits import getdata
+    return [getdata(filename) for filename in filenames]
 
 class MedianSmooth(BaseEstimator):
     def __init__(self, radius = 3):
