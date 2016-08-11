@@ -5,6 +5,7 @@ from sklearn.base import BaseEstimator
 def load_images(filenames):
     '''Expects filenames to be a list of .fits file locations'''
     from astropy.io.fits import getdata
+
     return [ normalized_positive_image(getdata(filename)) for filename in filenames ]
 
 def normalized_positive_image(image) :
@@ -13,7 +14,7 @@ def normalized_positive_image(image) :
     maintained.'''
     
     pos_def = image-image.min()+1.0
-    return np.log(pos_def) / np.log(pos_def.max())
+    return np.log(pos_def) / np.log(pos_def).max()
 
 
 class MedianSmooth(BaseEstimator):
