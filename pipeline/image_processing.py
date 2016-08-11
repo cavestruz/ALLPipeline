@@ -5,7 +5,7 @@ from sklearn.base import BaseEstimator
 def load_images(filenames):
     '''Expects filenames to be a list of .fits file locations'''
     from astropy.io.fits import getdata
-    return [getdata(filename).copy()/np.max(getdata(filename).copy()) for filename in filenames]
+    return [np.log(getdata(filename))/np.max(np.abs(np.log(getdata(filename)))) for filename in filenames]
 
 class MedianSmooth(BaseEstimator):
     def __init__(self, radius = 3):
@@ -25,11 +25,10 @@ class MedianSmooth(BaseEstimator):
 
 class HOG(BaseEstimator):
     def __init__(self, orientations = 9, pixels_per_cell = (8, 8),
-                 cells_per_block = (3, 3), normalise = False):
+                 cells_per_block = (3, 3) ):
         self.orientations = orientations
         self.pixels_per_cell = pixels_per_cell
         self.cells_per_block = cells_per_block
-        self.normalise = normalise
 
     def fit(self, images, y = None):
         return self
@@ -40,7 +39,7 @@ class HOG(BaseEstimator):
                              orientations = self.orientations,
                              pixels_per_cell = self.pixels_per_cell,
                              cells_per_block = self.cells_per_block,
-                             normalise = self.normalise)
+                             )
                          for image in images])
 
     def fit_transform(self, images, y = None):
