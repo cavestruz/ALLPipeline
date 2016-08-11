@@ -5,7 +5,17 @@ from sklearn.base import BaseEstimator
 def load_images(filenames):
     '''Expects filenames to be a list of .fits file locations'''
     from astropy.io.fits import getdata
-    return [np.log(getdata(filename))/np.max(np.abs(np.log(getdata(filename)))) for filename in filenames]
+    return [ normalized_positive_image(getdata(filename)) for filename in filenames]
+
+def normalized_positive_image(image) :
+    '''Images need to be numpy arrays between -1 and 1 for median and
+    possibly HOG, but also should be log normalized so contrast is
+    maintained.'''
+    
+    pos_def = image-image.min()+1.0
+    return np.log(pos_def) / np.log(pos_def.max())
+
+
 
 class MedianSmooth(BaseEstimator):
     def __init__(self, radius = 3):
