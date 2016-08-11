@@ -1,2 +1,3 @@
-python run_pipeline.py "/data/avestruz/StrongCNN/HST_like/1??_unlensed_*.fits" "/data/avestruz/StrongCNN/HST_like/1??_lensed_*.fits"
+python run_pipeline.py "../data/realistic_data/*_unlensed_*.fits" "../data/realistic_data/*_lensed_*.fits"
+
  
