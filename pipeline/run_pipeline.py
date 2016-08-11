@@ -56,7 +56,7 @@ if __name__ == "__main__":
                    'hog__orientations' : (8,),#, 10),
                    'hog__pixels_per_cell' : ((8, 8),),#, (16, 16)),
                    'hog__cells_per_block' : ((1, 1),),#, (3, 3)),
-                   'logistic_regression__C' : (0.1,0.5, 1., 2.,10) #Regularization parameter
+                   'logistic_regression__C' : (0.1,0.5, 1.,10) #Regularization parameter
                    },
                   # {'median_smooth__radius' : (5,),
                   #  'hog__orientations' : (8,),
