@@ -13,7 +13,7 @@ def normalized_positive_image(image) :
     possibly HOG, but also should be log normalized so contrast is
     maintained.'''
     
-    pos_def = np.clip(image,1e-6,1e100)
+    pos_def = np.clip(image,1e-6,1e100)+1.0
     return np.log(pos_def) / abs(np.log(pos_def)).max()
 
 
