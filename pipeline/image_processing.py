@@ -1,6 +1,8 @@
 import numpy as np
 import copy
 from sklearn.base import BaseEstimator
+from scipy.ndimage import rotate
+
 
 def load_images(filenames):
     '''Expects filenames to be a list of .fits file locations'''
@@ -16,6 +18,10 @@ def normalized_positive_image(image) :
     pos_def = np.clip(image,1e-6,1e100)+1.0
     return np.log(pos_def) / abs(np.log(pos_def)).max()
 
+def rotate_images(images, degrees) :
+    for d in degrees :
+        images += [ rotate(image, d) for image in images ]
+    return images
 
 class MedianSmooth(BaseEstimator):
     def __init__(self, radius = 3):
