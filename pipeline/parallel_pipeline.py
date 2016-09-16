@@ -65,7 +65,7 @@ if __name__ == "__main__":
     args = vars(parser.parse_args())
 
     C_vals = 10**np.arange(-3.,1.,.1)
-    rotation_degrees = [ 90, 180, 270 ]
+    rotation_degrees = [ 0, 90, 180, 270 ]
     parameters = [('logistic_regression__C',C_val) for C_val in C_vals ]
     
     # Load the data. X is a list of numpy arrays
@@ -76,7 +76,11 @@ if __name__ == "__main__":
     X = image_processing.load_images(filenames)
     X = image_processing.rotate_images(X, rotation_degrees)
     y = [0] * len(non_lens_filenames) + [1] * len(lens_filenames)
-    y = y*(len(rotation_degrees)+1)
+    y *= len(rotation_degrees)
+
+    print len(y), len(X)
+    import sys
+    sys.exit()
 
     # Train/test split
     X_train, X_test, y_train, y_test = train_test_split(X, y, train_size = 0.8)

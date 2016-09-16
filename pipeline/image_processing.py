@@ -20,7 +20,7 @@ def normalized_positive_image(image) :
 
 def rotate_images(images, degrees) :
 
-    rotated_images = images
+    rotated_images = []
     for d in degrees :
         rotated_images += [ rotate(image, d) for image in images ]
     return rotated_images
