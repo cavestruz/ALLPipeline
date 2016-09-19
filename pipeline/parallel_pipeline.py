@@ -78,7 +78,8 @@ if __name__ == "__main__":
     y = [0] * len(non_lens_filenames) + [1] * len(lens_filenames)
     y *= len(rotation_degrees)
 
-    print len(y), len(X)
+    print len(X), len(y)
+    print y
     import sys
     sys.exit()
 
