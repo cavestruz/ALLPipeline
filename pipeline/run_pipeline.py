@@ -22,6 +22,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('non_lens_glob')
     parser.add_argument('lens_glob')
+    parser.add_argument('log_reg__C')
 
     args = vars(parser.parse_args())
     
@@ -54,11 +55,11 @@ if __name__ == "__main__":
 
     # Create the grid search with list of parameters
     # to search
-    param_grid = [{'median_smooth__radius' : (2,3,),#, 5, 7),
+    param_grid = [{'median_smooth__radius' : (3,),#, 5, 7),
                    'hog__orientations' : (9,),#, 10),
                    'hog__pixels_per_cell' : ((8, 8),),#, (16, 16)),
-                   'hog__cells_per_block' : ((1, 1), (3, 3)),
-                   'logistic_regression__C' : (0.1,0.5, 1.,10) #Regularization parameter
+                   'hog__cells_per_block' : ((1, 1),),
+                   'logistic_regression__C' : (float(args['log_reg__C']),) #Regularization parameter
                    },
                   # {'median_smooth__radius' : (5,),
                   #  'hog__orientations' : (8,),
