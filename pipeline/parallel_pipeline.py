@@ -53,6 +53,8 @@ def score_for_params(kw) :
 
     pipeline.predict(X_test)
     
+    print len(X_train), len(X_test), len(y_train), len(y_test)
+
     return pipeline.score(X_train,y_train), pipeline.score(X_test, y_test)
 
 
@@ -74,17 +76,13 @@ if __name__ == "__main__":
     lens_filenames = glob.glob(args['lens_glob'])
     filenames = non_lens_filenames + lens_filenames
     X = image_processing.load_images(filenames)
-    X = image_processing.rotate_images(X, rotation_degrees)
     y = [0] * len(non_lens_filenames) + [1] * len(lens_filenames)
-    y *= len(rotation_degrees)
-
-    print len(X), len(y)
-    print y
-    import sys
-    sys.exit()
 
     # Train/test split
     X_train, X_test, y_train, y_test = train_test_split(X, y, train_size = 0.8)
+
+    X_train, y_train = image_processing.rotate_images( rotation_degrees, X_train, y_train )
+
     print "len(X_train) =", len(X_train)
     print "len(y_train) =", len(y_train)
     print "len(X_test) =", len(X_test)

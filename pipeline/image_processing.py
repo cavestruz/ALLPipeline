@@ -18,12 +18,14 @@ def normalized_positive_image(image) :
     pos_def = np.clip(image,1e-6,1e100)+1.0
     return np.log(pos_def) / abs(np.log(pos_def)).max()
 
-def rotate_images(images, degrees) :
+def rotate_images(degrees, images_X, images_y) :
 
-    rotated_images = []
+    rotated_images_X = []
+    rotated_y = []
     for d in degrees :
-        rotated_images += [ rotate(image, d) for image in images ]
-    return rotated_images
+        rotated_images_X += [ rotate(image, d) for image in images_X ]
+        rotated_y += images_y
+    return rotated_images_X, rotated_y
 
 class MedianSmooth(BaseEstimator):
     def __init__(self, radius = 3):
