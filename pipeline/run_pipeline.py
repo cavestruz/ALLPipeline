@@ -41,6 +41,8 @@ if __name__ == "__main__":
     print "len(y_test) =", len(y_test)
     print
 
+    X_train, y_train = image_processing.rotate(X_train, y_train)
+
     # Create the pipeline which consists of image
     # processing and a classifier
     image_processors = [('median_smooth', image_processing.MedianSmooth()),
