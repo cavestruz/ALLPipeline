@@ -67,7 +67,7 @@ if __name__ == "__main__":
     args = vars(parser.parse_args())
 
     C_vals = 10**np.arange(-3.,1.,.1)
-    rotation_degrees = [ 0, 90, 180, 270 ]
+    rotation_degrees = [ 0, 45, 90, 135, 180, 225, 270, 315 ]
     parameters = [('logistic_regression__C',C_val) for C_val in C_vals ]
     
     # Load the data. X is a list of numpy arrays
