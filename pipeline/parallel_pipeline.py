@@ -53,8 +53,6 @@ def score_for_params(kw) :
 
     pipeline.predict(X_test)
     
-    print len(X_train), len(X_test), len(y_train), len(y_test)
-
     return pipeline.score(X_train,y_train), pipeline.score(X_test, y_test)
 
 
@@ -95,5 +93,5 @@ if __name__ == "__main__":
     print C_vals, parameters
     print pool.map(score_for_params, C_vals)
     time_taken = time.time() - start_time
-    print "Time for 4", time_taken
+    print "Time for 4 worker processes:", time_taken
 
