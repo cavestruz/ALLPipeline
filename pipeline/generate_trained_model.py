@@ -7,6 +7,7 @@ import glob
 import cPickle as pickle
 import time
 import image_processing
+from sklearn.pipeline import Pipeline
 from sklearn.linear_model import LogisticRegression
 from collections import Counter
 
@@ -24,7 +25,7 @@ def _get_params(median=False, median_smooth__radius=3, hog__orientations=9,
     return locals()
 
 
-def succesful_predictions(kw) :
+def successful_predictions(kw) :
     '''
     | Create a pickle file of the trained model
     | returns successful predictions of the test data
@@ -70,9 +71,16 @@ def succesful_predictions(kw) :
 
     return map(lambda x: x[0] == x[1], zip(pipeline.predict(X_test), y_train) )
 
+def load_model(pklfile) :
+    '''Returns a trained model that can make predictions'''
+    
+    return pickle.load(pklfile)
 
-def get_false_predictions_list( successful_predictions, filenames ) :
+def get_false_predictions_list( trained_model, non_lens_test_glob, lens_test_glob ) :
 
+    X, y, filenames = generate_X_y( non_lens_test_glob , lens_test_glob ) 
+    successful_predictions = map( lambda x: x[0] == x[1], 
+                                  zip( trained_model.predict( X ), y) )
     
     return [ sf[1] for sf in zip( successful_predictions, filenames ) if sf[0] == 0 ]
 
@@ -98,7 +106,6 @@ if __name__ == "__main__":
 
     C_val = 10.
     rotation_degrees = [ 0, 90, 180, 270 ]
-    parameters = [('logistic_regression__C',C_val) for C_val in C_vals ]
     
     # Load the data. X is a list of numpy arrays
     # which are the images.
