@@ -73,8 +73,9 @@ def successful_predictions(kw) :
 
 def load_model(pklfile) :
     '''Returns a trained model that can make predictions'''
-    
-    return pickle.load(pklfile)
+
+    with open(pklfile,'r') as output :
+        return pickle.load(output)
 
 def get_false_predictions_list( trained_model, non_lens_test_glob, lens_test_glob ) :
 
