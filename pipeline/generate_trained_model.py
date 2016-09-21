@@ -25,7 +25,7 @@ def _get_params(median=False, median_smooth__radius=3, hog__orientations=9,
     return locals()
 
 
-def successful_predictions(kw) :
+def train_model(kw) :
     '''
     | Create a pickle file of the trained model
     | returns successful predictions of the test data
@@ -38,6 +38,7 @@ def successful_predictions(kw) :
     # processing and a classifier
     # Note - can make this map to a dictionary of image processors instead of just median
     image_processors = [ ('hog', image_processing.HOG()) ]
+
     if params.pop('median') :
         image_processors.insert(0,('median_smooth', image_processing.MedianSmooth()))
     else :
@@ -61,15 +62,6 @@ def successful_predictions(kw) :
     print confusion_matrix(pipeline.predict(X_train), y_train)
     print
     print "Score on training set =", pipeline.score(X_train, y_train)
-    print
-
-    # Score the test set                                                                                                                              
-    print "Confusion matrix on test set"
-    print confusion_matrix(pipeline.predict(X_test), y_test)
-    print
-    print "Score on test set =", pipepine.score(X_test, y_test)
-
-    return map(lambda x: x[0] == x[1], zip(pipeline.predict(X_test), y_train) )
 
 def load_model(pklfile) :
     '''Returns a trained model that can make predictions'''
@@ -77,9 +69,15 @@ def load_model(pklfile) :
     with open(pklfile,'r') as output :
         return pickle.load(output)
 
-def get_false_predictions_list( trained_model, non_lens_test_glob, lens_test_glob ) :
+def get_false_predictions_list( trained_model, X, y, filenames ) :
 
-    X, y, filenames = generate_X_y( non_lens_test_glob , lens_test_glob ) 
+    # Score the test set                                                                
+    print "Confusion matrix on test set"
+    print confusion_matrix(trained_model.predict(X), y)
+    print
+    print "Score on test set =", trained_model.score(X, y)
+
+
     successful_predictions = map( lambda x: x[0] == x[1], 
                                   zip( trained_model.predict( X ), y) )
     
@@ -102,6 +100,8 @@ if __name__ == "__main__":
     parser.add_argument('lens_glob')
     parser.add_argument('non_lens_test_glob')
     parser.add_argument('lens_test_glob')
+    parser.add_argument('model_pkl_name')
+    parser.add_argument('train_model_bool')
 
     args = vars(parser.parse_args())
 
@@ -116,8 +116,12 @@ if __name__ == "__main__":
 
     # Train/test split
     X_train, y_train = image_processing.rotate_images( rotation_degrees, X_train, y_train )
-    
-    print "False Predictions: ", get_false_predictions_list( successful_predictions(C_val), filenames_test )
+    if train_model_bool :
+        train_model(C_val)
+
+    print "False Predictions: "
+    print get_false_predictions_list( load_model(model_pkl_name), 
+                                      X_test, y_test, filenames_test )
 
     start_time = time.time()
     time_taken = time.time() - start_time
