@@ -66,8 +66,7 @@ if __name__ == "__main__":
 
     C_vals = 10**np.arange(-3.,1.,.1)
     rotation_degrees = [ 0, 45, 90, 135, 180, 225, 270, 315 ]
-    parameters = [('logistic_regression__C',C_val) for C_val in C_vals ]
-    
+
     # Load the data. X is a list of numpy arrays
     # which are the images.
     non_lens_filenames = glob.glob(args['non_lens_glob'])
@@ -90,7 +89,7 @@ if __name__ == "__main__":
     pool = Pool(processes=4)              # start 4 worker processes
 
     start_time = time.time()
-    print C_vals, parameters
+    print 'C_vals: ', C_vals
     print pool.map(score_for_params, C_vals)
     time_taken = time.time() - start_time
     print "Time for 4 worker processes:", time_taken

@@ -22,9 +22,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('non_lens_glob')
     parser.add_argument('lens_glob')
-    parser.add_argument('log_reg__C')
 
     args = vars(parser.parse_args())
+    rotation_degrees = [ 0, 90, 180, 270 ]
     
     # Load the data. X is a list of numpy arrays
     # which are the images.
@@ -35,19 +35,19 @@ if __name__ == "__main__":
     y = [0] * len(non_lens_filenames) + [1] * len(lens_filenames)
 
     # Train/test split
-    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size = 0.8)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size = 0.2)
+    X_train, y_train = image_processing.rotate_images(rotation_degrees,X_train, y_train)
+
     print "len(X_train) =", len(X_train)
     print "len(y_train) =", len(y_train)
     print "len(X_test) =", len(X_test)
     print "len(y_test) =", len(y_test)
     print
 
-    X_train, y_train = image_processing.rotate_images(degrees,X_train, y_train)
 
     # Create the pipeline which consists of image
     # processing and a classifier
-    image_processors = [('median_smooth', image_processing.MedianSmooth()),
-                        ('hog', image_processing.HOG())]
+    image_processors = [('hog', image_processing.HOG())]
     classifier = ('logistic_regression', LogisticRegression())
     estimators = image_processors + [classifier]
     
@@ -55,20 +55,11 @@ if __name__ == "__main__":
 
     # Create the grid search with list of parameters
     # to search
-    param_grid = [{'median_smooth__radius' : (3,),#, 5, 7),
-                   'hog__orientations' : (9,),#, 10),
-                   'hog__pixels_per_cell' : ((8, 8),),#, (16, 16)),
-                   'hog__cells_per_block' : ((1, 1),),
-                   'logistic_regression__C' : (float(args['log_reg__C']),) #Regularization parameter
+    param_grid = [{'hog__orientations' : (9,),#, 10),
+                   'hog__pixels_per_cell' : ((8, 8),(4, 4),(2, 2)),#, (16, 16)),
+                   'hog__cells_per_block' : ((1, 1),(2, 2),(3, 3)),
+                   'logistic_regression__C' : (1., 5., 10., 50.,) #Regularization parameter
                    },
-                  # {'median_smooth__radius' : (5,),
-                  #  'hog__orientations' : (8,),
-                  #  'hog__pixels_per_cell' : ((16, 16),),
-                  #  'hog__cells_per_block' : ((1, 1),),
-                  #  'logistic_regression__C' : (0.01, 0.1, 0.5,
-                  #                              1., 1.5, 2., 3.,
-                  #                              10.)
-                  #  }
                   ]
 
     grid_search = GridSearchCV(pipeline, param_grid,

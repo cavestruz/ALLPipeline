@@ -116,11 +116,11 @@ if __name__ == "__main__":
 
     # Train/test split
     X_train, y_train = image_processing.rotate_images( rotation_degrees, X_train, y_train )
-    if train_model_bool :
+    if args['train_model_bool'] :
         train_model(C_val)
 
     print "False Predictions: "
-    print get_false_predictions_list( load_model(model_pkl_name), 
+    print get_false_predictions_list( load_model(args['model_pkl_name']), 
                                       X_test, y_test, filenames_test )
 
     start_time = time.time()
