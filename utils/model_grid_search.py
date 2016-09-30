@@ -10,6 +10,7 @@ def parse_configfile(cfgfile) :
     import ConfigParser
     cfg_dict = {}
     Config = ConfigParser.ConfigParser()
+    Config.optionxform = str # Otherwise, options are lowercased
     Config.read(cfgfile)
     for section in Config.sections() : 
         cfg_dict[section] = { option: Config.get(section, option) \
@@ -24,7 +25,8 @@ def load_train_test_data(non_lens_glob, lens_glob, rotation_degrees=None) :
     |   X is a list of numpy arrays which are the images. 
     |
     '''
-    from ..IO import load_images, augment_images
+    import StrongCNN.IO.load_images as load_images 
+    import StrongCNN.IO.augment_images as augment_images
     from sklearn.cross_validation import train_test_split
     import glob
 
@@ -38,14 +40,15 @@ def load_train_test_data(non_lens_glob, lens_glob, rotation_degrees=None) :
     X_train, X_test, y_train, y_test = train_test_split(X, y, train_size = 0.2)
 
     # Rotate the training set
-    degrees = [ float(rotation_degree) for rotation_degree in rotation_degrees.values() ]
-    X_train, y_train = augment_images.rotate_images(rotation_degrees,X_train, y_train)
+    #degrees = [ float(rotation_degree) for rotation_degree in rotation_degrees.values() ]
+    #X_train, y_train = augment_images.rotate_images(rotation_degrees,X_train, y_train)
 
-    return
+    return X_train, y_train, X_test, y_test
 
 def build_parameter_grid(param_grid) :
-    
+    import ast
     return [ {k: ast.literal_eval(v) for k,v in param_grid.iteritems()} ]
+
 
 def build_pipeline(image_processor_labels, classifier_label) :
     '''
@@ -57,13 +60,13 @@ def build_pipeline(image_processor_labels, classifier_label) :
 
     from sklearn.pipeline import Pipeline
 
-    from pipeline_image_processing import image_processors
-    from pipeline_classifiers import classifiers
+    from StrongCNN.utils.pipeline_image_processors import image_processors
+    from StrongCNN.utils.pipeline_classifiers import classifiers
 
     estimators = []
     for label in image_processor_labels :
         estimators.append((label, image_processors[label]))
-    estimators.append((classifier_label, classifiers[label]))
+    estimators.append((classifier_label, classifiers[classifier_label]))
 
     return Pipeline(estimators)
 
@@ -75,7 +78,7 @@ def grid_search(pipeline, param_grid) :
     |
     '''
     from sklearn.grid_search import GridSearchCV
-    from model_info import print_model_scores
+    from StrongCNN.utils.model_info import print_model_scores
     import time
 
     gs = GridSearchCV(pipeline, param_grid, n_jobs = -1)
@@ -113,10 +116,11 @@ if __name__ == "__main__":
 
     cfg = parse_configfile(sys.argv[1])
 
-    load_train_test_data(cfg['filenames']['non_lens_glob'], 
-                         cfg['filenames']['lens_glob'],
-                         cfg['rotation_degrees']
-                         )
+    X_train, y_train, X_test, y_test = \
+        load_train_test_data(cfg['filenames']['non_lens_glob'], 
+                             cfg['filenames']['lens_glob'],
+                             cfg['rotation_degrees']
+                             )
     
     print "len(X_train) =", len(X_train)
     print "len(y_train) =", len(y_train)
