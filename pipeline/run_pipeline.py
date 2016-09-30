@@ -80,7 +80,7 @@ if __name__ == "__main__":
                          {'svm__C' : (5000.,),
                           'svm__gamma' : (0.1,)},
                          'knn' :
-                         {'knn__n_neighbors' : (1, 2, 3, 5, 10, 15)}
+                         {'knn__n_neighbors' : (1,)}
                          }
     param_grid[0].update(classifier_params[args['classifier']])
 
