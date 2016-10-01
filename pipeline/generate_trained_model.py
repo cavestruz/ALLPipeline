@@ -20,8 +20,8 @@ def confusion_matrix(predicted, actual):
     return Counter(zip(predicted, actual))
 
 def _get_params(median=False, median_smooth__radius=3, hog__orientations=9, 
-                hog__pixels_per_cell=(8,8), hog__cells_per_block=(1,1), 
-                logistic_regression__C=0.1) :
+                hog__pixels_per_cell=(16,16), hog__cells_per_block=(1,1), 
+                logistic_regression__C=10.) :
     return locals()
 
 
@@ -54,7 +54,7 @@ def train_model(kw) :
     # to search.  All values are now tuples
     pipeline.set_params(**params).fit(X_train, y_train)
 
-    with open('LogReg10.pkl','wb') as output :
+    with open('pickled_models/C10_4x4_3x3.pkl','wb') as output :
         pickle.dump(pipeline, output, -1)
 
     # Confusion matrix is                                                                                                                            
