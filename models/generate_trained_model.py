@@ -10,8 +10,8 @@ import ast
 cfg = parse_configfile(sys.argv[1])
 
 # Collect training data
-X_train, y_train = load_data(cfg['filenames']['non_lens_glob'], 
-                             cfg['filenames']['lens_glob'])
+X_train, y_train = load_data(cfg['train_filenames']['non_lens_glob'], 
+                             cfg['train_filenames']['lens_glob'])
 
 
 if 'augment_train_data' in cfg.keys() :
@@ -26,5 +26,6 @@ print "len(y_train) =", len(y_train)
 pipeline = build_pipeline(cfg['image_processing'].values(), 
                           cfg['classifier']['label'])
 
-# Perform the grid search
-grid_search(pipeline, param_grid, X_train, y_train, X_test, y_test) 
+params = set_params(cfg[''])
+
+train_model(pipeline, **params)

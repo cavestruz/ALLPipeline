@@ -30,3 +30,23 @@ def print_model_scores(model, X_train, y_train, X_test, y_test) :
     print
     print "Score on test set =", model.score(X_test, y_test)
 
+def get_false_predictions_list( trained_model, X, y, filenames ) :
+    '''
+    |    Trained model must have predict and score methods.
+    |    X, y and filenames must have same length
+    '''
+    assert( len(X) == len(y) ) 
+    assert( len(y) == len(filenames) )
+
+    # Score the test set                                                                
+    print "Confusion matrix on test set"
+    print confusion_matrix(trained_model.predict(X), y)
+    print
+    print "Score on test set =", trained_model.score(X, y)
+
+
+    successful_predictions = map( lambda x: x[0] == x[1], 
+                                  zip( trained_model.predict( X ), y) )
+    
+    return [ sf[1] for sf in zip( successful_predictions, filenames ) if sf[0] == 0 ]
+
