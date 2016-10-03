@@ -7,6 +7,7 @@ import image_processing
 from sklearn.cross_validation import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
+from sklearn.neighbors import KNeighborsClassifier
 from collections import Counter
 
 def confusion_matrix(predicted, actual):
@@ -53,7 +54,8 @@ if __name__ == "__main__":
     image_processors = [('hog', image_processing.HOG())]
 
     classifier_types = {'logistic_regression' : LogisticRegression,
-                        'svm' : SVC}
+                        'svm' : SVC,
+                        'knn' : KNeighborsClassifier}
     assert args['classifier'] in classifier_types, \
         "Classifier must be one of " + classifier_types.keys() + \
         " but got " + args['classifier']
@@ -66,17 +68,19 @@ if __name__ == "__main__":
 
     # Create the grid search with list of parameters
     # to search
-    param_grid = [{'hog__orientations' : (9,),#, 10),
-                   'hog__pixels_per_cell' : ((8, 8),(4, 4),(2, 2)),#, (16, 16)),
-                   'hog__cells_per_block' : ((1, 1),(2, 2),(3, 3)),
+    param_grid = [{'hog__orientations' : (9,),
+                   'hog__pixels_per_cell' : ((8, 8),),
+                   'hog__cells_per_block' : ((1, 1),),
                    },
                   ]
     # Regularization parameters
     classifier_params = {'logistic_regression' :
-                         {'logistic_regression__C' : (1., 5., 10., 50.,)},
+                         {'logistic_regression__C' : (10.,)},
                          'svm' :
-                         {'svm__C' : (0.01, 0.1, 0.5, 1., 2., 5., 10.),
-                          'svm__gamma' : ('auto', 0.01, 0.1, 0.5, 1., 2., 5., 10.)}
+                         {'svm__C' : (5000.,),
+                          'svm__gamma' : (0.1,)},
+                         'knn' :
+                         {'knn__n_neighbors' : (1,)}
                          }
     param_grid[0].update(classifier_params[args['classifier']])
 
