@@ -1,13 +1,15 @@
-import sys
-from sklearn.cross_validation import train_test_split
+import sys, ast
 from StrongCNN.IO.config_parser import parse_configfile
 from StrongCNN.IO.load_images import load_data
 from StrongCNN.IO.augment_data import augment_methods, augment_data
-from StrongCNN.grid_searches.tools import build_parameter_grid, grid_search
 from StrongCNN.pipeline.build_pipeline import build_pipeline
-import ast
+from _tools import train_model, dump_model
+import time
 
-cfg = parse_configfile(sys.argv[1])
+cfgdir = sys.argv[1]
+cfg = parse_configfile(cfgdir)
+
+start_time = time.time()
 
 # Collect training data
 X_train, y_train = load_data(cfg['train_filenames']['non_lens_glob'], 
@@ -22,10 +24,18 @@ if 'augment_train_data' in cfg.keys() :
 print "len(X_train) =", len(X_train)
 print "len(y_train) =", len(y_train)
 
+print "train glob ", cfg['train_filenames']['non_lens_glob'], cfg['train_filenames']['lens_glob']
+
 # Build the pipeline
 pipeline = build_pipeline(cfg['image_processing'].values(), 
                           cfg['classifier']['label'])
 
-params = set_params(cfg[''])
+params = {k: ast.literal_eval(v) for k, v in cfg['param_grid'].iteritems()}
 
-train_model(pipeline, **params)
+train_model(pipeline, X_train, y_train, **params)
+
+
+dump_model(cfgdir+'/'+cfg['model']['pklfile'], pipeline)
+
+print 'Time taken:', time.time() - start_time
+
