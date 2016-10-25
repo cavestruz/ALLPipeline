@@ -6,6 +6,8 @@ from sklearn.grid_search import GridSearchCV
 import image_processing
 from sklearn.cross_validation import train_test_split
 from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
+from sklearn.neighbors import KNeighborsClassifier
 from collections import Counter
 
 def confusion_matrix(predicted, actual):
@@ -22,6 +24,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('non_lens_glob')
     parser.add_argument('lens_glob')
+    parser.add_argument('-c', '--classifier', required = False,
+                        default = 'logistic_regression')
 
     args = vars(parser.parse_args())
     rotation_degrees = [ 0, 90, 180, 270 ]
@@ -48,19 +52,37 @@ if __name__ == "__main__":
     # Create the pipeline which consists of image
     # processing and a classifier
     image_processors = [('hog', image_processing.HOG())]
-    classifier = ('logistic_regression', LogisticRegression())
+
+    classifier_types = {'logistic_regression' : LogisticRegression,
+                        'svm' : SVC,
+                        'knn' : KNeighborsClassifier}
+    assert args['classifier'] in classifier_types, \
+        "Classifier must be one of " + classifier_types.keys() + \
+        " but got " + args['classifier']
+    classifier = (args['classifier'],
+                  classifier_types[args['classifier']]())
+    
     estimators = image_processors + [classifier]
     
     pipeline = Pipeline(estimators)
 
     # Create the grid search with list of parameters
     # to search
-    param_grid = [{'hog__orientations' : (9,),#, 10),
-                   'hog__pixels_per_cell' : ((8, 8),(4, 4),(2, 2)),#, (16, 16)),
-                   'hog__cells_per_block' : ((1, 1),(2, 2),(3, 3)),
-                   'logistic_regression__C' : (1., 5., 10., 50.,) #Regularization parameter
+    param_grid = [{'hog__orientations' : (9,),
+                   'hog__pixels_per_cell' : ((8, 8),),
+                   'hog__cells_per_block' : ((1, 1),),
                    },
                   ]
+    # Regularization parameters
+    classifier_params = {'logistic_regression' :
+                         {'logistic_regression__C' : (10.,)},
+                         'svm' :
+                         {'svm__C' : (5000.,),
+                          'svm__gamma' : (0.1,)},
+                         'knn' :
+                         {'knn__n_neighbors' : (1,)}
+                         }
+    param_grid[0].update(classifier_params[args['classifier']])
 
     grid_search = GridSearchCV(pipeline, param_grid,
                                n_jobs = -1)
