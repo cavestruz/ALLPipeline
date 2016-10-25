@@ -3,7 +3,7 @@ from sklearn.cross_validation import train_test_split
 from StrongCNN.IO.config_parser import parse_configfile
 from StrongCNN.IO.load_images import load_data
 from StrongCNN.IO.augment_data import augment_methods, augment_data
-from StrongCNN.grid_searches.tools import build_parameter_grid, grid_search
+from _tools import build_parameter_grid, grid_search
 from StrongCNN.pipeline.build_pipeline import build_pipeline
 import ast
 
