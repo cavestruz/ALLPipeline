@@ -7,6 +7,10 @@ def parse_configfile(cfgdir) :
     |
     '''
 
+    import os
+    
+    assert(os.path.exists(cfgdir))
+
     cfg_dict = {}
     Config = ConfigParser.ConfigParser()
     Config.optionxform = str # Otherwise, options are lowercased
