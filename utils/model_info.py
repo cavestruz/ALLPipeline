@@ -1,5 +1,6 @@
 import numpy as np
 from collections import Counter
+from sklearn.metrics import roc_curve, roc_auc_score
 
 def confusion_matrix(predicted, actual):
     '''
@@ -50,3 +51,32 @@ def get_false_predictions_list( trained_model, X, y, filenames ) :
     
     return [ sf[1] for sf in zip( successful_predictions, filenames ) if sf[0] == 0 ]
 
+def roc_curve_data(model, X, y):
+    '''
+    | Outputs the ROC curve for the given model and data.
+    | model must have predict_proba method.
+    |
+    | The output is two arrays:
+    | 1. fpr = False positive rate
+    | 2. tpr = True positive rate
+    |
+    | A ROC plot shows fpr on the x axis and tpr on the
+    | y axis.  More info:
+    | http://scikit-learn.org/stable/modules/generated/sklearn.metrics.roc_curve.html
+    '''
+    index_of_positive_class = np.where(model.classes_ == 1)[0][0]
+    scores = model.predict_proba(X)[:,index_of_positive_class]
+    fpr, tpr, _ = roc_curve(y, scores)
+    return fpr, tpr
+
+def roc_auc(model, X, y):
+    '''
+    | Outputs the area under the ROC curve for the given
+    | model and data.  model must have predict_proba method.
+    | The output is the area under the ROC curve (AUC).
+    | More info:
+    | http://scikit-learn.org/stable/modules/generated/sklearn.metrics.roc_auc_score.html
+    '''
+    index_of_positive_class = np.where(model.classes_ == 1)[0][0]
+    scores = model.predict_proba(X)[:,index_of_positive_class]
+    return roc_auc_score(y, scores)
