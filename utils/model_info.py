@@ -1,6 +1,7 @@
 import numpy as np
 from collections import Counter
 from sklearn.metrics import roc_curve, roc_auc_score
+from matplotlib import pyplot as plt
 
 def confusion_matrix(predicted, actual):
     '''
@@ -68,6 +69,19 @@ def roc_curve_data(model, X, y):
     scores = model.predict_proba(X)[:,index_of_positive_class]
     fpr, tpr, _ = roc_curve(y, scores)
     return fpr, tpr
+
+def roc_curve_plot(model, X, y, outfile):
+    '''
+    | Plots the ROC curve for the given model and data.
+    | Uses roc_curve_data to get the points for the plot,
+    | and then saves a pdf of the plot to outfile.
+    '''
+    fpr, tpr = roc_curve_data(model, X, y)
+    plt.plot(fpr, tpr)
+    plt.plot([0,1], [0,1], linestyle = '--', color = 'k')
+    plt.xlabel("False Positive Rate")
+    plt.ylabel("True Positive Rate")
+    plt.savefig(outfile)
 
 def roc_auc(model, X, y):
     '''
