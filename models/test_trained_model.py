@@ -23,7 +23,7 @@ X_test, y_test = load_data(cfg[set_name+'_filenames']['non_lens_glob'],
                            cfg[set_name+'_filenames']['lens_glob'])
 
 
-if 'augment_'+cfg_str+'_data' in cfg.keys() :
+if 'augment_'+set_name+'_data' in cfg.keys() :
     X_test, y_test = augment_data( X_test, y_test, 
                                      cfg['augment_'+set_name+'_data']['method_label'],
                                      **ast.literal_eval(cfg['augment_'+set_name+'_data']['method_kwargs']))  
