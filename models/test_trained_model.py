@@ -1,16 +1,24 @@
 import ast, sys, time
+import argparse
 from StrongCNN.IO.config_parser import parse_configfile
 from StrongCNN.IO.load_images import load_data
 from StrongCNN.IO.augment_data import augment_data
 from StrongCNN.utils.model_info import get_false_predictions_list
+from StrongCNN.utils.model_info import roc_auc, roc_curve_plot
 from _tools import generate_X_y, load_model
 
 '''
 Get the score and false ids of the model on either the training set or the test set
 '''
+parser = argparse.ArgumentParser()
+parser.add_argument('cfgdir')
+parser.add_argument('set_name')
+parser.add_argument('-p', '--roc_plot_filename', required = False)
 
-cfgdir = sys.argv[1]
-set_name = sys.argv[2]
+args = vars(parser.parse_args())
+
+cfgdir = args['cfgdir']
+set_name = args['set_name']
 
 cfg = parse_configfile(cfgdir)
 
@@ -45,4 +53,12 @@ for k,v in cfg['param_grid'].iteritems() :
 print 'False predictions: '
 print get_false_predictions_list(trained_model, X, y, filenames)
 print ''
+
+print 'AUC =', roc_auc(trained_model, X, y)
+print ''
+
+if args['roc_plot_filename'] is not None:
+    roc_curve_plot(trained_model, X, y,
+                   args['roc_plot_filename'])
+
 print 'Time taken:', time.time() - start_time
