@@ -24,6 +24,9 @@ if 'augment_train_data' in cfg.keys() :
 print "len(X_train) =", len(X_train)
 print "len(y_train) =", len(y_train)
 
+print X_train[0].shape
+
+
 print "train glob ", cfg['train_filenames']['non_lens_glob'], cfg['train_filenames']['lens_glob']
 
 # Build the pipeline
