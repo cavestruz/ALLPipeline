@@ -77,6 +77,7 @@ def roc_curve_plot(model, X, y, outfile):
     | and then saves a pdf of the plot to outfile.
     '''
     fpr, tpr = roc_curve_data(model, X, y)
+    plt.clf()
     plt.plot(fpr, tpr)
     plt.plot([0,1], [0,1], linestyle = '--', color = 'k')
     plt.xlabel("False Positive Rate")
@@ -94,3 +95,12 @@ def roc_auc(model, X, y):
     index_of_positive_class = np.where(model.classes_ == 1)[0][0]
     scores = model.predict_proba(X)[:,index_of_positive_class]
     return roc_auc_score(y, scores)
+
+def model_coeff_plot(model, outfile):
+    '''
+    | Plots the coefficents of the model and saves to
+    | outfile.  model must have model.coef_ attribute.
+    '''
+    plt.clf()
+    plt.plot( np.reshape(model.coef_, (model.coef_.shape[1],)) )
+    plt.savefig(outfile)

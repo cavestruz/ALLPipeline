@@ -5,6 +5,7 @@ from StrongCNN.IO.load_images import load_data
 from StrongCNN.IO.augment_data import augment_data
 from StrongCNN.utils.model_info import get_false_predictions_list
 from StrongCNN.utils.model_info import roc_auc, roc_curve_plot
+from StrongCNN.utils.model_info import model_coeff_plot
 from _tools import generate_X_y, load_model
 
 '''
@@ -14,6 +15,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('cfgdir')
 parser.add_argument('set_name')
 parser.add_argument('-p', '--roc_plot_filename', required = False)
+parser.add_argument('-c', '--model_coeff_plot_filename', required = False)
 
 args = vars(parser.parse_args())
 
@@ -60,5 +62,9 @@ print ''
 if args['roc_plot_filename'] is not None:
     roc_curve_plot(trained_model, X, y,
                    args['roc_plot_filename'])
+
+if args['model_coeff_plot_filename'] is not None:
+    model_coeff_plot(trained_model.steps[-1][1],
+                     args['model_coeff_plot_filename'])
 
 print 'Time taken:', time.time() - start_time
