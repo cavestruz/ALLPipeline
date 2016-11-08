@@ -94,7 +94,7 @@ def roc_auc(model, X, y):
     '''
     index_of_positive_class = np.where(model.classes_ == 1)[0][0]
     scores = model.predict_proba(X)[:,index_of_positive_class]
-    return roc_auc_score(y, scores)
+    print roc_auc_score(y, scores)
 
 def model_coeff_plot(model, outfile):
     '''
