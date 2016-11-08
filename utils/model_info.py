@@ -55,7 +55,8 @@ def get_false_predictions_list( trained_model, X, y, filenames ) :
 def roc_curve_data(model, X, y):
     '''
     | Outputs the ROC curve for the given model and data.
-    | model must have predict_proba method.
+    | model must have predict_proba or decision_function
+    | method.
     |
     | The output is two arrays:
     | 1. fpr = False positive rate
@@ -66,7 +67,12 @@ def roc_curve_data(model, X, y):
     | http://scikit-learn.org/stable/modules/generated/sklearn.metrics.roc_curve.html
     '''
     index_of_positive_class = np.where(model.classes_ == 1)[0][0]
-    scores = model.predict_proba(X)[:,index_of_positive_class]
+    if hasattr(model, 'predict_proba'):
+        scores = model.predict_proba(X)[:,index_of_positive_class]
+    elif hasattr(model, 'decision_function'):
+        scores = model.decision_function(X)
+    else:
+        raise Exception("model must have method predict_proba or decision_function")
     fpr, tpr, _ = roc_curve(y, scores)
     return fpr, tpr
 
@@ -74,7 +80,9 @@ def roc_curve_plot(model, X, y, outfile):
     '''
     | Plots the ROC curve for the given model and data.
     | Uses roc_curve_data to get the points for the plot,
-    | and then saves a pdf of the plot to outfile.
+    | and then saves a pdf of the plot to outfile. Also
+    | returns the data points in the plot in two arrays:
+    | fpr, tpr.
     '''
     fpr, tpr = roc_curve_data(model, X, y)
     plt.clf()
@@ -83,24 +91,35 @@ def roc_curve_plot(model, X, y, outfile):
     plt.xlabel("False Positive Rate")
     plt.ylabel("True Positive Rate")
     plt.savefig(outfile)
+    return fpr, tpr
 
 def roc_auc(model, X, y):
     '''
     | Outputs the area under the ROC curve for the given
-    | model and data.  model must have predict_proba method.
+    | model and data.  model must have predict_proba or
+    | decision_function method.
     | The output is the area under the ROC curve (AUC).
     | More info:
     | http://scikit-learn.org/stable/modules/generated/sklearn.metrics.roc_auc_score.html
     '''
     index_of_positive_class = np.where(model.classes_ == 1)[0][0]
-    scores = model.predict_proba(X)[:,index_of_positive_class]
+    if hasattr(model, 'predict_proba'):
+        scores = model.predict_proba(X)[:,index_of_positive_class]
+    elif hasattr(model, 'decision_function'):
+        scores = model.decision_function(X)
+    else:
+        raise Exception("model must have method predict_proba or decision_function")
     return roc_auc_score(y, scores)
 
 def model_coeff_plot(model, outfile):
     '''
     | Plots the coefficents of the model and saves to
     | outfile.  model must have model.coef_ attribute.
+    | Also returns the array of coefficients that are
+    | plotted.
     '''
+    data = np.reshape(model.coef_, (model.coef_.shape[1],))
     plt.clf()
-    plt.plot( np.reshape(model.coef_, (model.coef_.shape[1],)) )
+    plt.plot(data)
     plt.savefig(outfile)
+    return data
