@@ -16,7 +16,7 @@ def grid_search( pipeline, param_grid, X_train, y_train, X_test, y_test ) :
     from StrongCNN.utils.model_info import print_model_scores
     import time
 
-    gs = GridSearchCV(pipeline, param_grid, n_jobs = -1)
+    gs = GridSearchCV(pipeline, param_grid, n_jobs = 1)
 
     # Train the model on the training set
     print "Running grid search..."
