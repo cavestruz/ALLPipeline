@@ -52,6 +52,35 @@ def get_false_predictions_list( trained_model, X, y, filenames ) :
     
     return [ sf[1] for sf in zip( successful_predictions, filenames ) if sf[0] == 0 ]
 
+def get_ranked_predictions(trained_model, X, y, filenames):
+    '''
+    | Returns a list of tuples giving the scores for each
+    | filename that is sorted descending by score.
+    | trained_model must have predict_proba or
+    | decision_function method.
+    |
+    | Output format:
+    |
+    | [(filename1, score1, label1),
+    |  (filename2, score2, label2),
+    |  ...]
+    |
+    | where filename? is the filename corresponding to
+    | a given row of X from the filenames list, score?
+    | is the score for the given row of X from
+    | trained_model, and label? is the 1/0 label for
+    | the given row of X taken from the array y. The
+    | output will be sorted such that
+    | score1 >= score2 >= score3 >= ...
+    '''
+    assert( len(X) == len(y) )
+    assert( len(y) == len(filenames) )
+    
+    scores = get_scores(trained_model, X)
+    return sorted(zip(filenames, scores, y),
+                  key = lambda (filename, score, label) : score,
+                  reverse = True)
+
 def roc_curve_data(model, X, y):
     '''
     | Outputs the ROC curve for the given model and data.
@@ -66,13 +95,7 @@ def roc_curve_data(model, X, y):
     | y axis.  More info:
     | http://scikit-learn.org/stable/modules/generated/sklearn.metrics.roc_curve.html
     '''
-    index_of_positive_class = np.where(model.classes_ == 1)[0][0]
-    if hasattr(model, 'predict_proba'):
-        scores = model.predict_proba(X)[:,index_of_positive_class]
-    elif hasattr(model, 'decision_function'):
-        scores = model.decision_function(X)
-    else:
-        raise Exception("model must have method predict_proba or decision_function")
+    scores = get_scores(model, X)
     fpr, tpr, _ = roc_curve(y, scores)
     return fpr, tpr
 
@@ -102,14 +125,8 @@ def roc_auc(model, X, y):
     | More info:
     | http://scikit-learn.org/stable/modules/generated/sklearn.metrics.roc_auc_score.html
     '''
-    index_of_positive_class = np.where(model.classes_ == 1)[0][0]
-    if hasattr(model, 'predict_proba'):
-        scores = model.predict_proba(X)[:,index_of_positive_class]
-    elif hasattr(model, 'decision_function'):
-        scores = model.decision_function(X)
-    else:
-        raise Exception("model must have method predict_proba or decision_function")
-    print roc_auc_score(y, scores)
+    scores = get_scores(model, X)
+    return roc_auc_score(y, scores)
 
 def model_coeff_plot(model, outfile):
     '''
@@ -123,3 +140,16 @@ def model_coeff_plot(model, outfile):
     plt.plot(data)
     plt.savefig(outfile)
     return data
+
+def get_scores(model, X):
+    '''
+    | Returns the scores for each point. model must
+    | have predict_proba or decision_function method.
+    '''
+    index_of_positive_class = np.where(model.classes_ == 1)[0][0]
+    if hasattr(model, 'predict_proba'):
+        return model.predict_proba(X)[:,index_of_positive_class]
+    elif hasattr(model, 'decision_function'):
+        return model.decision_function(X)
+    else:
+        raise Exception("model must have method predict_proba or decision_function")
