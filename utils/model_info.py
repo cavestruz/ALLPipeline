@@ -81,6 +81,47 @@ def get_ranked_predictions(trained_model, X, y, filenames):
                   key = lambda (filename, score, label) : score,
                   reverse = True)
 
+def calc_tpr_fpr( filenames, scores, labels ) :
+    '''
+    |    Runs down the ordered scores and returns filenames
+    |    corresponding to the threshold yielding the returned true
+    |    positive rate and false positive rate
+    '''
+    assert( len(scores) == len(labels) and len(filenames) == len(scores) )
+    assert( all( scores[i] >= scores[i+1] for i in xrange(len(scores)-1) )  )
+
+    tpr, fpr = [], []
+    num_label1 = float(collections.Counter(labels)[1]))
+    num_label0 = float(collections.Counter(labels)[0]))
+
+    for i in len(labels) :
+        tpr.append(collections.Counter(labels[:i])[1] / num_label1
+        fpr.append(collections.Counter(labels[:i])[0] / num_label0
+
+    return tpr, fpr
+
+def get_tpr_index( tpr, tpr_min, tpr_max, fpr, fpr_min, fpr_max ) :
+    '''
+    |    Return the indices corresponding to tpr min and max, fpr_min and fpr_max
+    '''
+
+    assert( tpr_min >= tpr[-1] and tpr_max <= tpr[0] ) 
+    assert( fpr_min >= fpr[-1] and fpr_max <= fpr[0] ) 
+    assert( tpr_min <= tpr_max and fpr_min <= fpr_max ) 
+
+    tpr_indices = np.where( (tpr <= tpr_max) & (tpr >= tpr_min) ) 
+    fpr_indices = np.where( (fpr <= fpr_max) & (fpr >= fpr_min) ) 
+
+    return tpr_indices, fpr_indices
+
+def get_filenames_in_threshold_range(filenames, labels, tpr_indices, fpr_indices) :
+    '''
+    |    Return the filenames that satisfy the tpr or fpr range
+    '''
+    
+    return 
+
+
 def roc_curve_data(model, X, y):
     '''
     | Outputs the ROC curve for the given model and data.
