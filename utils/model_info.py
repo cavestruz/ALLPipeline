@@ -81,11 +81,14 @@ def get_ranked_predictions(trained_model, X, y, filenames):
                   key = lambda (filename, score, label) : score,
                   reverse = True)
 
-def calc_tpr_fpr( filenames, scores, labels ) :
+def calc_tpr_fpr( scores, labels ) :
     '''
-    |    Runs down the ordered scores and returns filenames
-    |    corresponding to the threshold yielding the returned true
-    |    positive rate and false positive rate
+    |    Runs down the ordered scores and returns tpr, fpr
+    |    corresponding to varied thresholds
+    |
+    |    Note: the built in roc_curve from sklearn.metrics only
+    |    returns the necessary tpr, fpr values to make the plot, and
+    |    not the intermediate points for constant tpr or fpr.
     '''
     assert( len(scores) == len(labels) and len(filenames) == len(scores) )
     assert( all( scores[i] >= scores[i+1] for i in xrange(len(scores)-1) )  )
@@ -116,10 +119,12 @@ def get_tpr_index( tpr, tpr_min, tpr_max, fpr, fpr_min, fpr_max ) :
 
 def get_filenames_in_threshold_range(filenames, labels, tpr_indices, fpr_indices) :
     '''
-    |    Return the filenames that satisfy the tpr or fpr range
+    |    Return the filenames and corresponding labels that satisfy
+    |     the tpr or fpr range by broadcasting.
     '''
     
-    return 
+    return zip( filenames[tpr_indices], labels[tpr_indices] ), \
+                       zip( filenames[fpr_indices], labels[fpr_indices] )
 
 
 def roc_curve_data(model, X, y):
