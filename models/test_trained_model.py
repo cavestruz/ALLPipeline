@@ -4,10 +4,9 @@ import numpy as np
 from StrongCNN.IO.config_parser import parse_configfile
 from StrongCNN.IO.load_images import load_data
 from StrongCNN.IO.augment_data import augment_data
-from StrongCNN.utils.model_info import get_false_predictions_list
 from StrongCNN.utils.model_info import roc_auc, roc_curve_plot
 from StrongCNN.utils.model_info import model_coeff_plot
-from _tools import generate_X_y, load_model
+from _tools import generate_X_y, load_model, get_false_predictions_list, get_filenames_in_threshold_range
 
 '''
 Get the score and false ids of the model on either the training set or the test set
@@ -61,7 +60,14 @@ print ''
 print 'AUC =', roc_auc(trained_model, X, y)
 print ''
 
-if args['roc_plot_filename'] is not None:
+if args['get_tpr_fpr_threshold'] is not None : 
+    filenames_in_tpr, filenames_in_fpr = get_filenames_in_threshold_range(trained_model, X, y, 
+                                                                          filenames, (tpr_min,tpr_max), 
+                                                                          (fpr_min, fpr_max) )
+    # np.savetxt(args['get_tpr_fpr_threshold'],
+    #            np.asarray(filenames_in
+
+if args['roc_plot_filename'] is not None :
     roc_data = roc_curve_plot(trained_model, X, y,
                               args['roc_plot_filename'])
     if args['roc_data_filename'] is not None :
@@ -69,7 +75,7 @@ if args['roc_plot_filename'] is not None:
                     np.asarray(roc_data).transpose())
 
 
-if args['model_coeff_plot_filename'] is not None:
+if args['model_coeff_plot_filename'] is not None :
     model_coeff_plot(trained_model.steps[-1][1],
                      args['model_coeff_plot_filename'])
 

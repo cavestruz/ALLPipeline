@@ -9,7 +9,7 @@ import glob
 import cPickle as pickle
 import time
 from StrongCNN.IO.load_images import load_data
-from StrongCNN.utils.model_info import get_false_predictions_list
+from StrongCNN.utils.features_selection import get_false_predictions_list, get_filenames_in_threshold_range
 
 
 def train_model(model_pipeline, X_train, y_train, **params) :
