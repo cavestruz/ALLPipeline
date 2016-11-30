@@ -1,6 +1,6 @@
 import numpy as np
 from collections import Counter
-from model_info import get_scores
+from model_info import get_scores, confusion_matrix
 
 def get_false_predictions_list( trained_model, X, y, filenames ) :
     '''
@@ -60,26 +60,26 @@ def _calc_tpr_fpr( scores, labels ) :
     |    returns the necessary tpr, fpr values to make the plot, and
     |    not the intermediate points for constant tpr or fpr.
     '''
-    assert( len(scores) == len(labels) and len(filenames) == len(scores) )
+    assert( len(scores) == len(labels) )
     assert( all( scores[i] >= scores[i+1] for i in xrange(len(scores)-1) )  )
 
     tpr, fpr = [], []
-    num_label1 = float(collections.Counter(labels)[1]))
-    num_label0 = float(collections.Counter(labels)[0]))
+    num_label1 = float(Counter(labels)[1])
+    num_label0 = float(Counter(labels)[0])
 
-    for i in len(labels) :
-        tpr.append(collections.Counter(labels[:i])[1] / num_label1
-        fpr.append(collections.Counter(labels[:i])[0] / num_label0
+    for i in range(len(labels)) :
+        tpr.append(Counter(labels[:i])[1] / num_label1)
+        fpr.append(Counter(labels[:i])[0] / num_label0)
 
-    return tpr, fpr
+    return np.array(tpr), np.array(fpr)
 
 def _get_tpr_fpr_indices( tpr, tpr_min, tpr_max, fpr, fpr_min, fpr_max ) :
     '''
     |    Return the indices corresponding to tpr min and max, fpr_min and fpr_max
     '''
 
-    assert( tpr_min >= tpr[-1] and tpr_max <= tpr[0] ) 
-    assert( fpr_min >= fpr[-1] and fpr_max <= fpr[0] ) 
+    assert( tpr_min >= tpr[0] and tpr_max <= tpr[-1] ) 
+    assert( fpr_min >= fpr[0] and fpr_max <= fpr[-1] ) 
     assert( tpr_min <= tpr_max and fpr_min <= fpr_max ) 
 
     tpr_indices = np.where( (tpr <= tpr_max) & (tpr >= tpr_min) )
@@ -89,16 +89,25 @@ def _get_tpr_fpr_indices( tpr, tpr_min, tpr_max, fpr, fpr_min, fpr_max ) :
 
 def get_filenames_in_threshold_range( trained_model, X, y, filenames, (tpr_min,tpr_max), (fpr_min, fpr_max) ) :
     '''
-    |    Return the filenames and corresponding labels that satisfy
-    |     the tpr or fpr range by broadcasting.
+    |    Return the filenames and corresponding scores, labels, tpr, and fpr that satisfy
+    |    the tpr or fpr range by broadcasting.  
+    |
+    |    Output format:
+    |    [(filename1, score1, label1, tpr1, fpr1), (filename2, score2, label2, tpr2, fpr2), ...]
+    |    where the data corresponding to the filenames fell within the tpr_min/max range
+    |    [(filename1b, label1b), (filename2b, label2b), ...]
+    |    where the data corresponding to the filenames fell within the fpr_min/max range
     '''
     
-    filenames, scores, labels = get_ranked_predictions( trained_model, X, y, filenames )               
+    ranked_predictions = get_ranked_predictions( trained_model, X, y, filenames )               
+    ordered_filenames = np.array([ rp[0] for rp in ranked_predictions ])
+    ordered_scores = np.array([ rp[1] for rp in ranked_predictions ])
+    ordered_labels = np.array([ rp[2] for rp in ranked_predictions ])
                    
-    tpr, fpr = _calc_tpr_fpr( scores, labels )
+    tpr, fpr = _calc_tpr_fpr( ordered_scores, ordered_labels )
     tpr_indices, fpr_indices = _get_tpr_fpr_indices( tpr, tpr_min, tpr_max, fpr, fpr_min, fpr_max ) 
 
-    return zip( filenames[tpr_indices], labels[tpr_indices] ), \
-                       zip( filenames[fpr_indices], labels[fpr_indices] )
+    return zip( ordered_filenames[tpr_indices], ordered_scores[tpr_indices], ordered_labels[tpr_indices], tpr[tpr_indices], fpr[fpr_indices] ), \
+        zip( ordered_filenames[fpr_indices], ordered_scores[fpr_indices], ordered_labels[fpr_indices], tpr[tpr_indices], fpr[fpr_indices] )
 
 

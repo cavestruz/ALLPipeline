@@ -17,6 +17,7 @@ parser.add_argument('set_name')
 parser.add_argument('-p', '--roc_plot_filename', required = False)
 parser.add_argument('-c', '--model_coeff_plot_filename', required = False)
 parser.add_argument('-r', '--roc_data_filename', required = False)
+parser.add_argument('-t', '--tpr_filename', required = False) 
 
 args = vars(parser.parse_args())
 
@@ -60,12 +61,17 @@ print ''
 print 'AUC =', roc_auc(trained_model, X, y)
 print ''
 
-if args['get_tpr_fpr_threshold'] is not None : 
+if args['tpr_filename'] is not None : 
+    tpr_min, tpr_max = 0., 1.
+    fpr_min, fpr_max = .1, .2
+
     filenames_in_tpr, filenames_in_fpr = get_filenames_in_threshold_range(trained_model, X, y, 
-                                                                          filenames, (tpr_min,tpr_max), 
-                                                                          (fpr_min, fpr_max) )
-    # np.savetxt(args['get_tpr_fpr_threshold'],
-    #            np.asarray(filenames_in
+                                                                                         filenames, (tpr_min,tpr_max), 
+                                                                                         (fpr_min, fpr_max) )
+    
+    np.savetxt(args['tpr_filename'],np.array(filenames_in_tpr),fmt='%s %s %s %s %s',
+               header="# filename score label tpr fpr")
+               
 
 if args['roc_plot_filename'] is not None :
     roc_data = roc_curve_plot(trained_model, X, y,
