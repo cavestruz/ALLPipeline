@@ -4,6 +4,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import operator
 import numpy as np
 from sklearn import metrics
 import tensorflow as tf
@@ -45,7 +46,8 @@ def conv_model(feature, target, mode,
         h_pool1, layer2_size, kernel_size=kernel_size, activation_fn=tf.nn.relu)
     h_pool2 = max_pool_2x2(h_conv2)
     # reshape tensor into a batch of vectors
-    h_pool2_flat = tf.reshape(h_pool2, [-1, 7 * 7 * layer2_size])
+    tot_length = reduce(operator.mul, h_pool2.get_shape().as_list()[1:], 1)
+    h_pool2_flat = tf.reshape(h_pool2, [-1, tot_length])
 
   # Densely connected layer with dense_layer_size neurons.
   h_fc1 = layers.dropout(
