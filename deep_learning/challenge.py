@@ -39,7 +39,7 @@ if __name__ == "__main__":
                       in zip(filenumbers, filenames)
                       if args.start_num <= number <= args.end_num]
 
-    images = np.array([pyfits.getdata(name) for number, name in filtered_files])
+    images = np.array([np.array(pyfits.getdata(name)) for number, name in filtered_files])
     image_dim = images.shape[1:]
     images = images.reshape(images.shape[0], image_dim[0] * image_dim[1])
 
@@ -50,9 +50,18 @@ if __name__ == "__main__":
     labels = np.array([labels[number] for number, name in filtered_files])
 
     assert labels.shape[0] == images.shape[0], (labels.shape[0], images.shape[0])
+    assert len(labels.shape) == 1, len(labels.shape)
+    assert set(labels) == {0, 1}, set(labels)
+
+    print labels.sum(), "lenses found,", labels.shape[0] - labels.sum(), "non-lenses found"
     
     X_train, X_test, y_train, y_test \
         = train_test_split(images, labels, test_size = 0.2)
+
+    print "X_train.shape =", X_train.shape
+    print "X_test.shape =", X_test.shape
+    print "y_train.shape =", y_train.shape
+    print "y_test.shape =", y_test.shape
 
     model_fn \
         = lambda feature, target, mode : conv_model(feature, target, mode,
