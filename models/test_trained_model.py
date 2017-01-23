@@ -63,7 +63,7 @@ print ''
 
 if args['tpr_filename'] is not None : 
     tpr_min, tpr_max = 0., 1.
-    fpr_min, fpr_max = .1, .2
+    fpr_min, fpr_max = 0., 1.
 
     filenames_in_tpr, filenames_in_fpr = get_filenames_in_threshold_range(trained_model, X, y, 
                                                                                          filenames, (tpr_min,tpr_max), 

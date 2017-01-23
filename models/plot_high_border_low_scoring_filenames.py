@@ -16,4 +16,7 @@ image_types = [ 'true_positives',
 for itype in image_types :
     idata = rmo.read_tpr_filenames(modeldir+'/'+itype+'.txt')
     tile_fits.plot_set(idata['fits_file'], modeldir+'/'+itype+'.pdf')
+
+
+    
     
