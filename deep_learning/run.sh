@@ -1,0 +1,1 @@
+python challenge.py "/media/luna2/nanli/deepLearningWorkingDir/LensFindingChallengeDatasets/SpaceBasedTraining/Data.0/Public/Band1/imageEUC_VIS-" 100002 110000 /media/luna2/nanli/deepLearningWorkingDir/LensFindingChallengeDatasets/SpaceBasedTraining/classifications.csv 2
