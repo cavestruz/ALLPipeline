@@ -64,8 +64,27 @@ class LogPositiveDefinite(BaseEstimator) :
     def transform( self, images ) :
         return np.array( [ self._normalize(image) for image in images ] )
 
+class PreprocessHST( BaseEstimator ) :
+    '''This is significantly the best set of preprocessing I've found
+    for our HST like data.'''
+    def __init__( self, clip_range = (1e-6,1e100), shift = 1.0 ):
+        self.clip_range = clip_range
+        self.shift = shift
+
+    def fit( self, images, y=None ) :
+        return self
+
+    def _pos_def( self, image ) :
+        return np.clip(image,self.clip_range[0],self.clip_range[1]) + self.shift
+
+    def transform( self, images ) :
+        return np.array( [ np.log(self._pos_def(image)) / abs(np.log(self._pos_def(image))).max() for image in images ] )
+
+    def fit_transform( self, images, y = None ) :
+        return self.transform( images ) 
+
 class HOG(BaseEstimator):
-    def __init__(self, orientations = 9, pixels_per_cell = (8, 8),
+    def __init__( self, orientations = 9, pixels_per_cell = (8, 8),
                  cells_per_block = (3, 3) ):
         self.orientations = orientations
         self.pixels_per_cell = pixels_per_cell
