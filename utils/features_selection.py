@@ -78,8 +78,8 @@ def _get_tpr_fpr_indices( tpr, tpr_min, tpr_max, fpr, fpr_min, fpr_max ) :
     |    Return the indices corresponding to tpr min and max, fpr_min and fpr_max
     '''
 
-    assert( tpr_min >= tpr[0] and tpr_max <= tpr[-1] ) 
-    assert( fpr_min >= fpr[0] and fpr_max <= fpr[-1] ) 
+    assert( tpr_min <= tpr[0] and tpr_max >= tpr[-1] ) 
+    assert( fpr_min <= fpr[0] and fpr_max >= fpr[-1] ) 
     assert( tpr_min <= tpr_max and fpr_min <= fpr_max ) 
 
     tpr_indices = np.where( (tpr <= tpr_max) & (tpr >= tpr_min) )
@@ -107,7 +107,7 @@ def get_filenames_in_threshold_range( trained_model, X, y, filenames, (tpr_min,t
     tpr, fpr = _calc_tpr_fpr( ordered_scores, ordered_labels )
     tpr_indices, fpr_indices = _get_tpr_fpr_indices( tpr, tpr_min, tpr_max, fpr, fpr_min, fpr_max ) 
 
-    return zip( ordered_filenames[tpr_indices], ordered_scores[tpr_indices], ordered_labels[tpr_indices], tpr[tpr_indices], fpr[fpr_indices] ), \
-        zip( ordered_filenames[fpr_indices], ordered_scores[fpr_indices], ordered_labels[fpr_indices], tpr[tpr_indices], fpr[fpr_indices] )
+    return zip( ordered_filenames[tpr_indices], ordered_scores[tpr_indices], ordered_labels[tpr_indices], tpr[tpr_indices], fpr[tpr_indices] ), \
+        zip( ordered_filenames[fpr_indices], ordered_scores[fpr_indices], ordered_labels[fpr_indices], tpr[fpr_indices], fpr[fpr_indices] )
 
 

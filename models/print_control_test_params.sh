@@ -2,17 +2,21 @@
 # separate columns.  Filenames look like:
 # DATAdir/lensed_<index>_<veldisp>_<ellip>_<angle>_<z>_<mag>_imgs.fits
 
-Cdir=$1
+modeldir=$1
 
-echo "# index veldisp ell angle z mag score tpr fpr" > $Cdir/control_test_params.txt 
+test_params_file=$modeldir/control_test_params.txt 
+echo "index velocity_dispersion ellipticity orientation_angle z magnification score label tpr fpr" > $test_params_file
 
-tprfile=$model/filenames_tpr_fpr.out # Check name of this...
+tprfile=$modeldir/tpr_filenames.txt
 
-# Split each line of the tpr file by filename, score, tpr, and fpr
-$(cat tprfile | awk '//')
-# Split each line of the tpr file by the last few _
+cat $tprfile | awk 'NR>1' | while read fitsname b;
+do
+# Get just the parameters from the fitsfile name
+# For HST data names
+#lens_params=$(echo $fitsname | tr '_' ' ' | awk '{print $5 " " $6 " " $7 " " $8 " " $9 " " $10}')
+# For LSST data names
+lens_params=$(echo $fitsname | tr '_' ' ' |  awk '{print $6 " " $7 " " $8 " " $9 " " $10 " " $11}')
+echo $lens_params $b >> $test_params_file
+done
 
-testauc=$(cat $testfile | awk '/AUC/ {print $NF}')
-
-echo $testauc >> $Cdir/control_test_params.txt
 
