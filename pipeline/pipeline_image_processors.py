@@ -111,5 +111,6 @@ image_processors = { 'median_filter' : MedianSmooth(),
                      'clip' : Clip(),
                      'log_positive_definite' : LogPositiveDefinite(),
                      'scale' : StandardScaler(),
-                     'imputer' : Imputer()
+                     'imputer' : Imputer(),
+                     'hst' : PreprocessHST(),
                      }
