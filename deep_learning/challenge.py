@@ -75,8 +75,9 @@ if __name__ == "__main__":
     print
     X_train, X_test, y_train, y_test \
         = train_test_split(X, y, test_size = 0.2, vrb=True)
+    del X, y
 
-    network = conv_network(X.shape[1:3], 2)
+    network = conv_network(X_train.shape[1:3], 2)
     model = tflearn.DNN(network, tensorboard_verbose=0)
     model.fit({'input': X_train}, {'target' : y_train},
               n_epoch=args.n_epoch,
@@ -84,24 +85,28 @@ if __name__ == "__main__":
               snapshot_step=100, show_metric=True,
               run_id='convnet_challenge')
 
-    # train_score \
-    #     = metrics.accuracy_score(y_train,
-    #                              list(classifier.predict(X_train)))
-    # train_confusion_matrix \
-    #     = metrics.confusion_matrix(y_train,
-    #                                list(classifier.predict(X_train)))
-    # test_score \
-    #     = metrics.accuracy_score(y_test,
-    #                              list(classifier.predict(X_test)))
-    # test_confusion_matrix \
-    #     = metrics.confusion_matrix(y_test,
-    #                                list(classifier.predict(X_test)))
+    train_probability = np.array(model.predict(X_train))[:,1]
+    test_probability = np.array(model.predict(X_test))[:,1]
 
-    # print 'Train Accuracy: {0:f}'.format(train_score)
-    # print 'Test Accuracy: {0:f}'.format(test_score)
-    # print
-    # print 'Train Confusion Matrix:'
-    # print train_confusion_matrix
-    # print
-    # print 'Test Confusion Matrix:'
-    # print test_confusion_matrix
+    train_predict = (train_probability > 0.5).astype(int)
+    test_predict = (test_probability > 0.5).astype(int)
+
+    train_score = metrics.accuracy_score(y_train[:,1], train_predict)
+    train_confusion_matrix = metrics.confusion_matrix(y_train[:,1], train_predict)
+    train_auc = metrics.roc_auc_score(y_train[:,1], train_probability)
+
+    test_score = metrics.accuracy_score(y_test[:,1], test_predict)
+    test_confusion_matrix = metrics.confusion_matrix(y_test[:,1], test_predict)
+    test_auc = metrics.roc_auc_score(y_test[:,1], test_probability)
+
+    print 'Train Accuracy: {0:f}'.format(train_score)
+    print 'Test Accuracy: {0:f}'.format(test_score)
+    print
+    print 'Train Confusion Matrix:'
+    print train_confusion_matrix
+    print
+    print 'Test Confusion Matrix:'
+    print test_confusion_matrix
+    print
+    print 'Train AUC: {0:f}'.format(train_auc)
+    print 'Test AUC: {0:f}'.format(test_auc)
