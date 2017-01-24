@@ -1,5 +1,6 @@
 import numpy as np
 from sklearn.base import BaseEstimator
+from sklearn.preprocessing import StandardScaler, Imputer
 
 class MedianSmooth(BaseEstimator):
     def __init__(self, radius = 3):
@@ -20,10 +21,10 @@ class MedianSmooth(BaseEstimator):
 class Clip(BaseEstimator) :
     '''Numpy clip'''
 
-    def __init__( self, clip_min=1e-6, clip_max=1e100):
+    def __init__( self, lower=1e-6, upper=1e100):
 
-        self.clip_min = clip_min
-        self.clip_max = clip_max
+        self.clip_min = lower
+        self.clip_max = upper
 
     def fit(self, image, y=None) : 
 
@@ -90,4 +91,6 @@ image_processors = { 'median_filter' : MedianSmooth(),
                      'hog' : HOG(),    
                      'clip' : Clip(),
                      'log_positive_definite' : LogPositiveDefinite(),
+                     'scale' : StandardScaler(),
+                     'imputer' : Imputer()
                      }

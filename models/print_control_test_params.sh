@@ -13,9 +13,9 @@ cat $tprfile | awk 'NR>1' | while read fitsname b;
 do
 # Get just the parameters from the fitsfile name
 # For HST data names
-#lens_params=$(echo $fitsname | tr '_' ' ' | awk '{print $5 " " $6 " " $7 " " $8 " " $9 " " $10}')
+lens_params=$(echo $fitsname | tr '_' ' ' | awk '{print $5 " " $6 " " $7 " " $8 " " $9 " " $10}')
 # For LSST data names
-lens_params=$(echo $fitsname | tr '_' ' ' |  awk '{print $6 " " $7 " " $8 " " $9 " " $10 " " $11}')
+#lens_params=$(echo $fitsname | tr '_' ' ' |  awk '{print $6 " " $7 " " $8 " " $9 " " $10 " " $11}')
 echo $lens_params $b >> $test_params_file
 done
 

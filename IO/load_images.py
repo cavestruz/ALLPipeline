@@ -5,8 +5,8 @@ import glob
 def load_images(filenames):
     '''Expects filenames to be a list of .fits file locations'''
     from astropy.io.fits import getdata
-
-    return [ normalized_positive_image(getdata(filename)) for filename in filenames ]
+    return [ getdata(filename).copy() for filename in filenames ]
+    #return [ normalized_positive_image(getdata(filename)) for filename in filenames ]
 
 def normalized_positive_image(image) :
     '''Images need to be numpy arrays between -1 and 1 for median and
