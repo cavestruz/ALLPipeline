@@ -14,7 +14,7 @@ def create_links(datadir='{0,1}/Data.0/Public/Band1/',lensdir='./lensed/',unlens
         if not os.path.exists(ldir) :
             print "making "+ldir
             os.mkdir(ldir)
-        for i in ids[10:] :
+        for i in ids[:10] :
             #print datadir+"*"+str(i)+"*.fits"
             fitsfile = glob(datadir+"*"+str(i)+"*.fits")[0]
             # Create hard link
@@ -24,11 +24,10 @@ def create_links(datadir='{0,1}/Data.0/Public/Band1/',lensdir='./lensed/',unlens
 #create_links(datadir="dummy_data/")
 #create_links(datadir="/data/avestruz/StrongCNN/Challenge/SpaceBased/SpaceBasedTraining/[01]/Data.[01]/Public/Band1/*")
 
-# Create soft links for NoSourceImage
-create_links(datadir="/data/avestruz/StrongCNN/Challenge/SpaceBased/SpaceBasedTraining/[01]/Data.[01]/Private/Band1/NoSourceImage/*",
-             lensdir="./NoSourceImageLensed/",
-             unlensdir="./NoSourceImageUnlensed/")
-# Create soft links for NoLensImage
-create_links(datadir="/data/avestruz/StrongCNN/Challenge/SpaceBased/SpaceBasedTraining/[01]/Data.[01]/Private/Band1/NoLensImage/*",
-             lensdir="./NoLensImageLensed/",
-             unlensdir="./NoLensImageUnlensed/")
+for band in ['Band1','Band2','Band3','Band4'] :
+
+    create_links(datadir='/data/avestruz/StrongCNN/Challenge/GroundBased/GroundBasedTraining/Data.[01]/Public/'+band+'/',
+                 lensdir='/data/avestruz/StrongCNN/Challenge/GroundBased/GroundBasedTraining/lensed-'+band+'/',
+                 unlensdir='/data/avestruz/StrongCNN/Challenge/GroundBased/GroundBasedTraining/unlensed-'+band+'/',
+                 csvfile='/data/avestruz/StrongCNN/Challenge/GroundBased/GroundBasedTraining/classifications.csv'
+             )
