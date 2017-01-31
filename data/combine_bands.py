@@ -1,16 +1,20 @@
 from astropy.io.fits import getdata, writeto
 import numpy as np
 from glob import glob
-import os
-                         
+import os, time, sys
+
+lensed = sys.argv[1]
+
+time_now = time.time()               
+          
 def get_file_by_ID( directory, ID ) :
     filename = glob(directory+'/*'+ID+'*.fits*')
     assert( len(filename) == 1 )
     return filename[0] 
 
 def get_all_bands( band_directories, ID ) :
-    return np.array([ getdata( get_file_by_ID( band_dir, ID ) ) for \
-                              for band_dir in band_directories ])
+    return np.array([ getdata( get_file_by_ID( band_dir, ID ) )  \
+                          for band_dir in band_directories ])
 
 def write_combined_fits( combined_directory, band_directories, ID ) :
 
@@ -24,18 +28,17 @@ def get_IDs( IDs_directory, IDs_glob='*' ) :
 
 def write_combined_fits_for_IDs( IDs_directory, IDs_glob, band_directories, combined_directory ) :
     if not os.path.exists(combined_directory) :
-        printing "making ", combined_directory
+        print "making ", combined_directory
         os.mkdir( combined_directory ) 
     for ID in get_IDs( IDs_directory, IDs_glob=IDs_glob ) :
         write_combined_fits(  combined_directory, band_directories, ID  )
 
 
 if __name__ == "__main__" :
-    write_combined_fits_for_IDs( 
-        'GroundBased/lensed-Band1/',
-        '*10000*',
-        ['GroundBased/lensed-Band'+str(i)+'/' for i in range(1,5) ],
-        'GroundBased/lensed-all/'
-        )
-
+    IDs_dir = '/data/avestruz/StrongCNN/Challenge/GroundBased/GroundBasedTraining/'+lensed+'-Band1/'
+    IDs_glob = '*'
+    band_directories = ['/data/avestruz/StrongCNN/Challenge/GroundBased/GroundBasedTraining/'+lensed+'-Band'+str(i)+'/' for i in range(1,5) ]
+    combined_directory = '/data/avestruz/StrongCNN/Challenge/GroundBased/GroundBasedTraining/'+lensed+'-all/'
+    write_combined_fits_for_IDs( IDs_dir, IDs_glob, band_directories, combined_directory  )
+    print "Time taken for ", IDs_dir+IDs_glob, time.time() - time_now
 
