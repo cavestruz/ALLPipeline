@@ -1,6 +1,6 @@
 import numpy as np
 from sklearn.base import BaseEstimator
-from sklearn.preprocessing import StandardScaler, Imputer
+from sklearn.preprocessing import StandardScaler, Imputer, Normalizer
 
 class MedianSmooth(BaseEstimator):
     def __init__(self, radius = 3):
@@ -174,5 +174,6 @@ image_processors = { 'median_filter' : MedianSmooth(),
                      'hst' : PreprocessHST(),
                      'midpointsigmaclip' : MidpointSigmaClip(),
                      'norm' : Norm(),
+                     'normalizer' : Normalizer(),
                      }
 
