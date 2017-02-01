@@ -229,3 +229,39 @@ image_processors = { 'median_filter' : MedianSmooth(),
                      'concatenated_hog' : ConcatenatedHOG(),
                      }
 
+
+def image_mask_avg_impute(image, mask_value = 100, max_iter = 5):
+    """
+    Imputes pixels with mask_value with the average value of
+    their neighbors. In case a pixel has all masked neighbors,
+    the operation is performed iteratively until all pixels
+    are imputed, or max_iter is reached.
+    """
+    image = np.array(image)
+    for _ in range(max_iter):
+        masked_indices = zip(*np.where(image == mask_value))
+
+        if not masked_indices:
+            break
+        
+        for i, j in masked_indices:
+            image[i,j] = np.average([x for x in get_neighbors(image, i, j)
+                                     if x != mask_value])
+    return image
+
+def get_neighbors(image, i, j):
+    """
+    Get the values of the immediate neighbors in
+    two dimensions.
+    """
+    neighbor_vals = []
+    if i > 0:
+        neighbor_vals.append(image[i-1, j])
+    if i < image.shape[0] - 1:
+        neighbor_vals.append(image[i+1, j])
+    if j > 0:
+        neighbor_vals.append(image[i, j-1])
+    if j < image.shape[1] - 1:
+        neighbor_vals.append(image[i, j+1])
+
+    return neighbor_vals
