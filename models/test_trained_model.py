@@ -4,9 +4,9 @@ import numpy as np
 from StrongCNN.IO.config_parser import parse_configfile
 from StrongCNN.IO.load_images import load_data
 from StrongCNN.IO.augment_data import augment_data
-from StrongCNN.utils.model_info import roc_auc, roc_curve_plot
+from StrongCNN.utils.model_info import roc_auc, roc_curve_plot, get_scores
 from StrongCNN.utils.model_info import model_coeff_plot
-from _tools import generate_X_y, load_model, get_false_predictions_list, get_filenames_in_threshold_range
+from _tools import generate_X_y, load_model, get_false_predictions_list, get_filenames_in_threshold_range, generate_X_scores
 
 '''
 Get the score and false ids of the model on either the training set or the test set
@@ -18,6 +18,7 @@ parser.add_argument('-p', '--roc_plot_filename', required = False)
 parser.add_argument('-c', '--model_coeff_plot_filename', required = False)
 parser.add_argument('-r', '--roc_data_filename', required = False)
 parser.add_argument('-t', '--tpr_filename', required = False) 
+parser.add_argument('-s', '--filenames_scores', required = False ) 
 
 args = vars(parser.parse_args())
 
@@ -54,12 +55,13 @@ for k,v in cfg['param_grid'].iteritems() :
     print k, v
     print ''
 
-print 'False predictions: '
-print get_false_predictions_list(trained_model, X, y, filenames)
-print ''
+if cfg[set_name+'_filenames']['lens_glob'] != '' and cfg[set_name+'_filenames']['non_lens_glob'] != '' :
+    print 'False predictions: '
+    print get_false_predictions_list(trained_model, X, y, filenames)
+    print ''
 
-print 'AUC =', roc_auc(trained_model, X, y)
-print ''
+    print 'AUC =', roc_auc(trained_model, X, y)
+    print ''
 
 if args['tpr_filename'] is not None : 
     tpr_min, tpr_max = 0., 1.
@@ -84,5 +86,10 @@ if args['roc_plot_filename'] is not None :
 if args['model_coeff_plot_filename'] is not None :
     model_coeff_plot(trained_model.steps[-1][1],
                      args['model_coeff_plot_filename'])
+
+if args['filenames_scores'] is not None :
+    np.savetxt( args['filenames_scores'],np.asarray(generate_X_scores( trained_model, X, y, filenames )).transpose(),
+                fmt='%s %s', header='filename score',comments='' )
+    
 
 print 'Time taken:', time.time() - start_time
