@@ -177,12 +177,12 @@ class ConcatenatedHOG(BaseEstimator) :
     def __init__( self, orientations=(4, 5, 6, 4),
                   pixels_per_cell=((16,16),(16,16),(16,16),(16,16)),
                   cells_per_block=((3,3),(3,3),(3,3),(3,3),),
-                  avg_impute=False,
+                  avg_mask=False,
                   ) :
         self.orientations = orientations
         self.pixels_per_cell = pixels_per_cell
         self.cells_per_block = cells_per_block
-        self.avg_impute=avg_impute
+        self.avg_mask=avg_mask
     def fit( self, images, y = None ) :
         return self
 
@@ -199,14 +199,13 @@ class ConcatenatedHOG(BaseEstimator) :
         return image / abs(image).max()
 
     def _preprocess( self, image ) :
-        if self.avg_impute :
-            return self._div_by_max( self._log_pos_def( self._norm( self._clip( image_mask_avg_impute(image[i]) ) ) ) )
+        if self.avg_mask :
+            return self._div_by_max( self._log_pos_def( self._norm( self._clip( image_mask_avg_impute(image) ) ) ) )
         else :
-            return self._div_by_max( self._log_pos_def( self._norm( self._clip( image[i] ) ) ) )
+            return self._div_by_max( self._log_pos_def( self._norm( self._clip( image ) ) ) )
 #            return np.array( [ self._div_by_max( self._log_pos_def( self._norm( self._clip( image[i] ) ) ) )
 #                               for i in range( image.shape[0] ) ] )
                    
-
     def _concatenated_hog( self, image ) :
         for kwarg in [ self.orientations, self.pixels_per_cell, 
                        self.cells_per_block ] :
