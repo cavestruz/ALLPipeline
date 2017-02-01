@@ -263,23 +263,33 @@ image_processors = { 'median_filter' : MedianSmooth(),
                      }
 
 
-def image_mask_avg_impute(image, mask_value = 100, max_iter = 5):
+def image_mask_avg_impute(image, mask_value = 100., max_iter = 5):
     """
     Imputes pixels with mask_value with the average value of
     their neighbors. In case a pixel has all masked neighbors,
     the operation is performed iteratively until all pixels
     are imputed, or max_iter is reached.
     """
+    masked_indices = zip(*np.where(image == mask_value))
+    if not masked_indices:
+        return image
     image = np.array(image)
-    for _ in range(max_iter):
-        masked_indices = zip(*np.where(image == mask_value))
 
-        if not masked_indices:
-            break
-        
+    masked_values = [image[i, j] for i, j in masked_indices]
+
+    for _ in range(max_iter):
         for i, j in masked_indices:
-            image[i,j] = np.average([x for x in get_neighbors(image, i, j)
-                                     if x != mask_value])
+            unmasked_neighbor_vals = [x for x in get_neighbors(image, i, j)
+                                      if x != mask_value]
+            if not unmasked_neighbor_vals:
+                continue
+            image[i,j] = np.average(unmasked_neighbor_vals)
+
+        masked_values_prev = masked_values
+        masked_values = [image[i, j] for i, j in masked_indices]
+        if masked_values_prev == masked_values:
+            break
+
     return image
 
 def get_neighbors(image, i, j):
