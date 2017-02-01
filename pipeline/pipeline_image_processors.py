@@ -178,11 +178,14 @@ class ConcatenatedHOG(BaseEstimator) :
                   pixels_per_cell=((16,16),(16,16),(16,16),(16,16)),
                   cells_per_block=((3,3),(3,3),(3,3),(3,3),),
                   avg_mask=False,
+                  strips=False
                   ) :
         self.orientations = orientations
         self.pixels_per_cell = pixels_per_cell
         self.cells_per_block = cells_per_block
         self.avg_mask=avg_mask
+        self.strips=strips
+
     def fit( self, images, y = None ) :
         return self
 
@@ -199,12 +202,11 @@ class ConcatenatedHOG(BaseEstimator) :
         return image / abs(image).max()
 
     def _preprocess( self, image ) :
-        if self.avg_mask :
-            return self._div_by_max( self._log_pos_def( self._norm( self._clip( image_mask_avg_impute(image) ) ) ) )
+        if self.strips :
+            return np.array( [ self._div_by_max( self._log_pos_def( self._norm( self._clip( image[i] ) ) ) )
+                               for i in range( image.shape[0] ) ] )
         else :
             return self._div_by_max( self._log_pos_def( self._norm( self._clip( image ) ) ) )
-#            return np.array( [ self._div_by_max( self._log_pos_def( self._norm( self._clip( image[i] ) ) ) )
-#                               for i in range( image.shape[0] ) ] )
                    
     def _concatenated_hog( self, image ) :
         for kwarg in [ self.orientations, self.pixels_per_cell, 
@@ -214,11 +216,35 @@ class ConcatenatedHOG(BaseEstimator) :
             except AssertionError :
                 print "assertion error", image.shape[0],'!=',len(kwarg),' for ', kwarg
 
-        return np.concatenate( [ hog( self._preprocess(image[i]), 
-                                      orientations = self.orientations[i],
-                                      pixels_per_cell = self.pixels_per_cell[i],
-                                      cells_per_block = self.cells_per_block[i]
-                                      ) for i in range( image.shape[0] ) ] )
+        if self.avg_mask :
+            if len(image.shape) == 2 :
+                i = 1
+                return hog( self._preprocess( image_mask_avg_impute(image) ), 
+                                          orientations = self.orientations[i],
+                                          pixels_per_cell = self.pixels_per_cell[i],
+                                          cells_per_block = self.cells_per_block[i]
+                                          )
+            else :
+                return np.concatenate( [ hog( self._preprocess( image_mask_avg_impute(image[i]) ), 
+                                              orientations = self.orientations[i],
+                                              pixels_per_cell = self.pixels_per_cell[i],
+                                              cells_per_block = self.cells_per_block[i]
+                                              ) for i in range( image.shape[0] ) ] )
+        else :
+            if len(image.shape) == 2 :
+                i = 1
+                return hog( self._preprocess(image[i]), 
+                            orientations = self.orientations[i],
+                            pixels_per_cell = self.pixels_per_cell[i],
+                            cells_per_block = self.cells_per_block[i]
+                            )
+
+            else :
+                return np.concatenate( [ hog( self._preprocess(image[i]), 
+                                              orientations = self.orientations[i],
+                                              pixels_per_cell = self.pixels_per_cell[i],
+                                              cells_per_block = self.cells_per_block[i]
+                                              ) for i in range( image.shape[0] ) ] )
 
 
     def transform( self, images ) :
