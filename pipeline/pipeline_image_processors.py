@@ -2,7 +2,7 @@ import numpy as np
 from sklearn.base import BaseEstimator
 from sklearn.preprocessing import StandardScaler, Imputer, Normalizer
 from skimage.feature import hog
-
+from numpy.linalg import norm
 
 class MedianSmooth(BaseEstimator):
     def __init__(self, radius = 3):
@@ -19,6 +19,33 @@ class MedianSmooth(BaseEstimator):
 
     def fit_transform(self, images, y = None):
         return self.transform(images)
+
+class Flatten(BaseEstimator) :
+    def __init__( self, axis=None ) :
+        self.axis = axis
+
+    def fit( self, images, y = None ) :
+        return self
+
+    def transform( self, images ) :
+        return np.array( [ image.flatten() for image in images ] )
+
+    def fit_transform( self, images, y = None ) :
+        return self.transform( images ) 
+
+class UnFlatten(BaseEstimator) :
+    def __init__( self, shape = (101, 101) ) :
+        self.shape = shape
+
+    def fit( self, images, y = None ) :
+        return self
+
+    def transform( self, images ) :
+        return np.array( [ np.reshape( image, self.shape ) for image in images ] )
+
+    def fit_transform( self, images, y = None ) :
+        return self.transform( images ) 
+
 
 class Norm(BaseEstimator) : 
     def __init__( self, axis=None ) :
@@ -148,24 +175,24 @@ class ConcatenatedHOG(BaseEstimator) :
     '''For multiband training - specific to DES four band.  
     Requires tuples of the hog parameterization for each band'''
     def __init__( self, orientations=(4, 5, 6, 4),
-                  pixels_per_cell=(),
-                  cells_per_block=()
+                  pixels_per_cell=((16,16),(16,16),(16,16),(16,16)),
+                  cells_per_block=((3,3),(3,3),(3,3),(3,3),)
                   ) :
         self.orientations = orientations
-        self.pixels_per_cell = pixels_per_block
+        self.pixels_per_cell = pixels_per_cell
         self.cells_per_block = cells_per_block
                   
     def fit( self, images, y = None ) :
         return self
 
     def _clip( self, image ) :
-        return np.clip( image, np.mean(image) - image.std(), 1e100 )
+        return np.clip( image, image.mean() - image.std(), 1e100 )
 
     def _norm( self, image ) :
         return image / norm( image ) 
 
     def _log_pos_def( self, image ) :
-        return np.log( image + 1.0 ) / abs(np.log( image + 1.0 ).max()
+        return np.log( image + 1.0 )
 
     def _div_by_max( self, image ) :
         return image / abs(image).max()
@@ -174,10 +201,14 @@ class ConcatenatedHOG(BaseEstimator) :
         return np.array( [ self._div_by_max( self._log_pos_def( self._norm( self._clip( image[i] ) ) ) )
                            for i in range( image.shape[0] ) ] )
 
-    def _concatenate_hog( self, image ) :
+    def _concatenated_hog( self, image ) :
         for kwarg in [ self.orientations, self.pixels_per_cell, 
                        self.cells_per_block ] :
-            assert( image.shape[0] == len(kwarg) )
+            try : 
+                assert( image.shape[0] == len(kwarg) )
+            except AssertionError :
+                print "assertion error", image.shape[0],'!=',len(kwarg),' for ', kwarg
+
         return np.concatenate( [ hog( self._preprocess(image[i]), 
                                       orientations = self.orientations[i],
                                       pixels_per_cell = self.pixels_per_cell[i],
@@ -186,7 +217,7 @@ class ConcatenatedHOG(BaseEstimator) :
 
 
     def transform( self, images ) :
-        return np.array([ self._concatenate_hog( image ) for image in images ])
+        return np.array([ self._concatenated_hog( image ) for image in images ])
 
         
     def fit_transform(self, images, y = None):
@@ -227,6 +258,8 @@ image_processors = { 'median_filter' : MedianSmooth(),
                      'norm' : Norm(),
                      'normalizer' : Normalizer(),
                      'concatenated_hog' : ConcatenatedHOG(),
+                     'flatten' : Flatten(),
+                     'unflatten' : UnFlatten(),
                      }
 
 
