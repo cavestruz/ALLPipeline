@@ -279,7 +279,7 @@ def image_mask_avg_impute(image, mask_value = 100., max_iter = 5):
 
     for _ in range(max_iter):
         for i, j in masked_indices:
-            unmasked_neighbor_vals = [x for x in get_neighbors(image, i, j)
+            unmasked_neighbor_vals = [x for x in _get_neighbors(image, i, j)
                                       if x != mask_value]
             if not unmasked_neighbor_vals:
                 continue
@@ -292,7 +292,7 @@ def image_mask_avg_impute(image, mask_value = 100., max_iter = 5):
 
     return image
 
-def get_neighbors(image, i, j):
+def _get_neighbors(image, i, j):
     """
     Get the values of the immediate neighbors in
     two dimensions.
