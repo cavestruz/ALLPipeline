@@ -176,12 +176,13 @@ class ConcatenatedHOG(BaseEstimator) :
     Requires tuples of the hog parameterization for each band'''
     def __init__( self, orientations=(4, 5, 6, 4),
                   pixels_per_cell=((16,16),(16,16),(16,16),(16,16)),
-                  cells_per_block=((3,3),(3,3),(3,3),(3,3),)
+                  cells_per_block=((3,3),(3,3),(3,3),(3,3),),
+                  avg_impute=False,
                   ) :
         self.orientations = orientations
         self.pixels_per_cell = pixels_per_cell
         self.cells_per_block = cells_per_block
-                  
+        self.avg_impute=avg_impute
     def fit( self, images, y = None ) :
         return self
 
@@ -198,8 +199,13 @@ class ConcatenatedHOG(BaseEstimator) :
         return image / abs(image).max()
 
     def _preprocess( self, image ) :
-        return np.array( [ self._div_by_max( self._log_pos_def( self._norm( self._clip( image[i] ) ) ) )
-                           for i in range( image.shape[0] ) ] )
+        if self.avg_impute :
+            return self._div_by_max( self._log_pos_def( self._norm( self._clip( image_mask_avg_impute(image[i]) ) ) ) )
+        else :
+            return self._div_by_max( self._log_pos_def( self._norm( self._clip( image[i] ) ) ) )
+#            return np.array( [ self._div_by_max( self._log_pos_def( self._norm( self._clip( image[i] ) ) ) )
+#                               for i in range( image.shape[0] ) ] )
+                   
 
     def _concatenated_hog( self, image ) :
         for kwarg in [ self.orientations, self.pixels_per_cell, 
@@ -274,6 +280,10 @@ def image_mask_avg_impute(image, mask_value = 100., max_iter = 5):
     if not masked_indices:
         return image
     image = np.array(image)
+    try :
+        assert( len(image.shape) == 2 )
+    except AssertionError :
+        print image.shape, image
 
     masked_values = [image[i, j] for i, j in masked_indices]
 
