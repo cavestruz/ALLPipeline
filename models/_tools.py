@@ -10,7 +10,7 @@ import cPickle as pickle
 import time
 from StrongCNN.IO.load_images import load_data
 from StrongCNN.utils.features_selection import get_false_predictions_list, get_filenames_in_threshold_range
-
+from StrongCNN.utils.model_info import get_scores
 
 def train_model(model_pipeline, X_train, y_train, **params) :
     '''
@@ -43,3 +43,8 @@ def generate_X_y(non_lens_glob, lens_glob) :
     X, y = load_data(non_lens_glob, lens_glob)
 
     return X, y, filenames
+
+def generate_X_scores( model, X, y, filenames ) :
+    '''Reads in features, prints filenames and associated scores '''
+    return filenames, get_scores( model, X ), y
+
