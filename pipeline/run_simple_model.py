@@ -71,4 +71,5 @@ if __name__ == "__main__":
 
     X, y = get_data_avg_scores(args['data_files'])
     print 'Average Scores'
+    print
     logistic(X, y, args['logistic_regression_C'])
