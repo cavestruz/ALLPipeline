@@ -104,3 +104,8 @@ def get_scores(model, X):
         return model.decision_function(X)
     else:
         raise Exception("model must have method predict_proba or decision_function")
+
+def generate_AUC_fpr_tpr( y, predictions ) :
+    from sklearn import metrics
+    fpr, tpr, _ = metrics.roc_curve( y, predictions )
+    return metrics.auc(fpr, tpr), (fpr, tpr)
