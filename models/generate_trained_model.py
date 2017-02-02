@@ -12,8 +12,8 @@ cfg = parse_configfile(cfgdir)
 start_time = time.time()
 
 # Collect training data
-X_train, y_train = load_data(cfg['train_filenames']['non_lens_glob'], 
-                             cfg['train_filenames']['lens_glob'])
+X_train, y_train, _ = load_data(cfg['train_filenames']['non_lens_glob'], 
+                                cfg['train_filenames']['lens_glob'])
 
 
 if 'augment_train_data' in cfg.keys() :

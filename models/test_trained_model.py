@@ -32,8 +32,8 @@ start_time = time.time()
 assert(set_name in ['test','train'])
 
 # Collect testing data
-X_test, y_test = load_data(cfg[set_name+'_filenames']['non_lens_glob'], 
-                           cfg[set_name+'_filenames']['lens_glob'])
+X_test, y_test, filenames = load_data(cfg[set_name+'_filenames']['non_lens_glob'], 
+                                      cfg[set_name+'_filenames']['lens_glob'])
 
 
 if 'augment_'+set_name+'_data' in cfg.keys() :
@@ -46,8 +46,6 @@ print "len(y_test) =", len(y_test)
 
 trained_model = load_model(cfgdir+'/'+cfg['model']['pklfile'])
 
-X, y, filenames = generate_X_y(cfg[set_name+'_filenames']['non_lens_glob'], 
-                                         cfg[set_name+'_filenames']['lens_glob']) 
 print set_name+' filename glob', cfg[set_name+'_filenames']['non_lens_glob'], cfg[set_name+'_filenames']['lens_glob']
 print ''
 print 'Testing model parameter grid:'
@@ -57,18 +55,18 @@ for k,v in cfg['param_grid'].iteritems() :
 
 if cfg[set_name+'_filenames']['lens_glob'] != '' and cfg[set_name+'_filenames']['non_lens_glob'] != '' :
     print 'False predictions: '
-    print get_false_predictions_list(trained_model, X, y, filenames)
+    #print get_false_predictions_list(trained_model, X_test, y_test, filenames)
     print ''
 
-    print 'AUC =', roc_auc(trained_model, X, y)
+    print 'AUC =', roc_auc(trained_model, X_test, y_test)
     print ''
 
 if args['tpr_filename'] is not None : 
     tpr_min, tpr_max = 0., 1.
     fpr_min, fpr_max = 0., 1.
 
-    filenames_in_tpr, filenames_in_fpr = get_filenames_in_threshold_range(trained_model, X, y, 
-                                                                                         filenames, (tpr_min,tpr_max), 
+    filenames_in_tpr, filenames_in_fpr = get_filenames_in_threshold_range(trained_model, X_test, y_test, 
+                                                                          filenames, (tpr_min,tpr_max), 
                                                                                          (fpr_min, fpr_max) )
     
     np.savetxt(args['tpr_filename'],np.array(filenames_in_tpr),fmt='%s %s %s %s %s',
@@ -76,7 +74,7 @@ if args['tpr_filename'] is not None :
                
 
 if args['roc_plot_filename'] is not None :
-    roc_data = roc_curve_plot(trained_model, X, y,
+    roc_data = roc_curve_plot(trained_model, X_test, y_test,
                               args['roc_plot_filename'])
     if args['roc_data_filename'] is not None :
         np.savetxt(args['roc_data_filename'], 
@@ -88,8 +86,13 @@ if args['model_coeff_plot_filename'] is not None :
                      args['model_coeff_plot_filename'])
 
 if args['filenames_scores'] is not None :
-    np.savetxt( args['filenames_scores'],np.asarray(generate_X_scores( trained_model, X, y, filenames )).transpose(),
-                fmt='%s %s', header='filename score',comments='' )
+    train_length = len(X_test)
+    assert( train_length == len(y_test) )
+    for i in range(4) :
+        np.savetxt( args['filenames_scores'].split('.txt')[0]+str(i)+'.txt',
+                    np.asarray(generate_X_scores( trained_model, X_test[i*train_length/4:(i+1)*train_length/4], 
+                                                  y_test[i*train_length/4:(i+1)*train_length/4], filenames )).transpose(),
+                    fmt='%s %s %s', header='filename score label',comments='' )
     
 
 print 'Time taken:', time.time() - start_time
