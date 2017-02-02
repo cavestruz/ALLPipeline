@@ -187,7 +187,7 @@ class MidpointSigmaClip(BaseEstimator) :
     def fit_transform( self, images, y = None ) :
         return self.transform( images )
 
-def SKPreProcessNormalize(BaseEstimator) :
+class SKPreProcessNormalize(BaseEstimator) :
     def __init__( self, normalize = True ) :
         self.normalize = normalize
 
