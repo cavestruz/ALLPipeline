@@ -21,7 +21,7 @@ def load_data(non_lens_glob, lens_glob) :
     '''
     |
     |   Load the data. 
-    |   Returns X, y
+    |   Returns X, y, filenames
     |   X is a list of numpy arrays which are the images. 
     |   y is a list of corresponding 0's and 1's
     '''
@@ -30,4 +30,4 @@ def load_data(non_lens_glob, lens_glob) :
     lens_filenames = glob.glob(lens_glob)
     filenames = non_lens_filenames + lens_filenames
 
-    return load_images(filenames), [0] * len(non_lens_filenames) + [1] * len(lens_filenames)
+    return load_images(filenames), [0] * len(non_lens_filenames) + [1] * len(lens_filenames), filenames

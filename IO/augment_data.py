@@ -1,12 +1,12 @@
 '''Collection of methods to augment data.  All methods have the X and y data as the first two arguments, and any number of kwargs'''
 from scipy.ndimage import rotate
 
-def _rotate_images(images_X, images_y, degrees=[0]) :
+def _rotate_images(images_X, images_y, degrees=[0], axes=(1,0)) :
 
     rotated_images_X = []
     rotated_y = []
     for d in degrees :
-        rotated_images_X += [ rotate(image, int(d)) for image in images_X ]
+        rotated_images_X += [ rotate(image, int(d), axes=axes) for image in images_X ]
         rotated_y += images_y
     return rotated_images_X, rotated_y
 
