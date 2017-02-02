@@ -4,6 +4,22 @@ from sklearn.preprocessing import StandardScaler, Imputer, Normalizer
 from skimage.feature import hog
 from numpy.linalg import norm
 
+
+class MaskAverageImpute(BaseEstimator) :
+    def __init__( self, mask_value = 100., max_iter = 5 ) :
+        self.mask_value = mask_value
+        self.max_iter = max_iter
+
+    def fit( self, images, y = None ) :
+        return self
+    
+    def transform( self, images ) :
+        return np.array( [ image_mask_avg_impute(image) for image in images ] )
+
+    def fit_transform( self, images, y = None ) :
+        return self.transform( images )
+
+
 class MedianSmooth(BaseEstimator):
     def __init__(self, radius = 3):
         self.radius = radius
@@ -278,22 +294,6 @@ class HOG(BaseEstimator):
         return self.transform(images)
 
 
-image_processors = { 'median_filter' : MedianSmooth(),
-                     'hog' : HOG(),    
-                     'clip' : Clip(),
-                     'log_positive_definite' : LogPositiveDefinite(),
-                     'scale' : StandardScaler(),
-                     'imputer' : Imputer(),
-                     'hst' : PreprocessHST(),
-                     'midpointsigmaclip' : MidpointSigmaClip(),
-                     'norm' : Norm(),
-                     'normalizer' : Normalizer(),
-                     'concatenated_hog' : ConcatenatedHOG(),
-                     'flatten' : Flatten(),
-                     'unflatten' : UnFlatten(),
-                     }
-
-
 def image_mask_avg_impute(image, mask_value = 100., max_iter = 5):
     """
     Imputes pixels with mask_value with the average value of
@@ -343,3 +343,21 @@ def _get_neighbors(image, i, j):
         neighbor_vals.append(image[i, j+1])
 
     return neighbor_vals
+
+image_processors = { 'median_filter' : MedianSmooth(),
+                     'hog' : HOG(),    
+                     'clip' : Clip(),
+                     'log_positive_definite' : LogPositiveDefinite(),
+                     'scale' : StandardScaler(),
+                     'imputer' : Imputer(),
+                     'hst' : PreprocessHST(),
+                     'midpointsigmaclip' : MidpointSigmaClip(),
+                     'norm' : Norm(),
+                     'normalizer' : Normalizer(),
+                     'concatenated_hog' : ConcatenatedHOG(),
+                     'flatten' : Flatten(),
+                     'unflatten' : UnFlatten(),
+                     'mask_avg_impute' : MaskAverageImpute() ,
+                     }
+
+
