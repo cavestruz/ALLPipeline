@@ -23,13 +23,14 @@ def print_ID_and_avg_score( fdir='.',
         df[rotation].sort_values(by='IDs',inplace=True) 
     
     # append other scores to first
-    df[rotated_scores[0]]['avgscores'] = df[rotated_scores[0]]['score']/4.
-    for rotation in rotated_scores[1:] :
+    df[rotated_scores[0]]['avgscores'] = 0.
+    for i, rotation in enumerate(rotated_scores) :
         df[rotated_scores[0]]['avgscores'] += df[rotation]['score']/4.
-        df[rotated_scores[0]][rotation] = df[rotation]['score']
+        df[rotated_scores[0]]['score'+str(i)] = df[rotation]['score']
 
     df[rotated_scores[0]].to_csv( path_or_buf=fdir+outfile1, sep=' ', columns=['IDs', 'avgscores'], index=False )
-    df[rotated_scores[0]].to_csv( path_or_buf=fdir+outfile3, sep=' ', columns=['IDs', 'label', 'avgscores', 'score']+rotated_scores[1:], index=False )
+    df[rotated_scores[0]].to_csv( path_or_buf=fdir+outfile3, sep=' ', columns=['IDs', 'label', 'avgscores', 'score0', 'score1', 'score2', 'score3'],
+                                  index=False )
 
     if AUC_file != None :
         f = open(fdir+AUC_file, 'w')
