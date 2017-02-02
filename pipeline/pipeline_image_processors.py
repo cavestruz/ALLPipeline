@@ -187,6 +187,20 @@ class MidpointSigmaClip(BaseEstimator) :
     def fit_transform( self, images, y = None ) :
         return self.transform( images )
 
+def SKPreProcessNormalize(BaseEstimator) :
+    def __init__( self, normalize = True ) :
+        self.normalize = normalize
+
+    def fit( self, images, y = None ) :
+        return self
+
+    def transform( self, image ) :
+        from sklearn.preprocessing import normalize
+        return np.array( [ normalize(image) for image in images ] )
+
+    def fit_transform( self, images, y = None ) :
+        return self.transform( images )
+
 class ConcatenatedHOG(BaseEstimator) :
     '''For multiband training - specific to DES four band.  
     Requires tuples of the hog parameterization for each band'''
@@ -358,6 +372,7 @@ image_processors = { 'median_filter' : MedianSmooth(),
                      'flatten' : Flatten(),
                      'unflatten' : UnFlatten(),
                      'mask_avg_impute' : MaskAverageImpute() ,
+                     'sknormalize' : SKPreProcessNormalize(),
                      }
 
 
