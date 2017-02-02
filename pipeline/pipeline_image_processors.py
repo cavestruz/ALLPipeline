@@ -162,9 +162,9 @@ class MidpointSigmaClip(BaseEstimator) :
 
     def transform( self, images ) :
         if self.normalize : 
-            from numpy.linalg import norm
-            #from sklearn.preprocessing import normalize
-            return np.array([ self._clip(image)/norm(self._clip(image)) for image in images])
+            #from numpy.linalg import norm
+            from sklearn.preprocessing import normalize
+            return np.array([ self._clip(normalize(image)) for image in images])
         else :
             return np.array([ self._clip(image) for image in images])
 
@@ -218,7 +218,7 @@ class ConcatenatedHOG(BaseEstimator) :
 
         if self.avg_mask :
             if len(image.shape) == 2 :
-                i = 1
+                i = 0
                 return hog( self._preprocess( image_mask_avg_impute(image) ), 
                                           orientations = self.orientations[i],
                                           pixels_per_cell = self.pixels_per_cell[i],
@@ -232,8 +232,8 @@ class ConcatenatedHOG(BaseEstimator) :
                                               ) for i in range( image.shape[0] ) ] )
         else :
             if len(image.shape) == 2 :
-                i = 1
-                return hog( self._preprocess(image[i]), 
+                i = 0
+                return hog( self._preprocess(image), 
                             orientations = self.orientations[i],
                             pixels_per_cell = self.pixels_per_cell[i],
                             cells_per_block = self.cells_per_block[i]
