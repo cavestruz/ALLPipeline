@@ -33,12 +33,19 @@ def write_combined_fits_for_IDs( IDs_directory, IDs_glob, band_directories, comb
     for ID in get_IDs( IDs_directory, IDs_glob=IDs_glob ) :
         write_combined_fits(  combined_directory, band_directories, ID  )
 
+def write_data_subset( i ) :
+    
+    band_dirs =  ['/data/avestruz/StrongCNN/Challenge/FinalData/GroundBased/Data_KiDS_Big.'+str(i)+'/Public/Band'+str(band)+'/' \
+                            for band in range(1, 5)  ]
+    IDs_dir = band_directories[0]
+    IDs_glob = '*'
+    combined_dir = '/data/avestruz/StrongCNN/Challenge/FinalData/GroundBased/combined_bands/'+'Data_KiDS_Big.'+str(i)+'/'
+    write_combined_fits_for_IDs( IDs_dir, IDs_glob, band_dirs, combined_dir )
 
 if __name__ == "__main__" :
-    IDs_dir = '/data/avestruz/StrongCNN/Challenge/GroundBased/GroundBasedTraining/'+lensed+'-Band1/'
-    IDs_glob = '*'
-    band_directories = ['/data/avestruz/StrongCNN/Challenge/GroundBased/GroundBasedTraining/'+lensed+'-Band'+str(i)+'/' for i in range(1,5) ]
-    combined_directory = '/data/avestruz/StrongCNN/Challenge/GroundBased/GroundBasedTraining/'+lensed+'-all/'
-    write_combined_fits_for_IDs( IDs_dir, IDs_glob, band_directories, combined_directory  )
+    from multiprocessing import Pool
+    p = Pool(4)
+    p.map(write_data_subset, range(3,11) )
+
     print "Time taken for ", IDs_dir+IDs_glob, time.time() - time_now
 
