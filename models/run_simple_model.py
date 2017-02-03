@@ -72,11 +72,14 @@ def logistic_train_test_split(X, y, log_reg_C=10000.):
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('cfgdir')
+    parser.add_argument('-d', '--cfgdir', 
+                        required=True)
     parser.add_argument('data_files', nargs='+')
     parser.add_argument('-C', '--logistic_regression_C', type=float,
                         required=False, default=10000.)
-    parser.add_argument('-p', '--pickle_model', type=str,
+    parser.add_argument('-p', '--pickle_model', 
+                        required=False )
+    parser.add_argument('-t', '--test_model', 
                         required=False )
 
     args = vars(parser.parse_args())
