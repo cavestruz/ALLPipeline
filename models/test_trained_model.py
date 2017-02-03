@@ -86,13 +86,15 @@ if args['model_coeff_plot_filename'] is not None :
                      args['model_coeff_plot_filename'])
 
 if args['filenames_scores'] is not None :
-    train_length = len(X_test)
-    assert( train_length == len(y_test) )
+    X_length = len(X_test)
+    assert( X_length == len(y_test) )
+    assert( X_length/4 == len(filenames) )
+    print "Length of X and y: ", X_length
     for i in range(4) :
-        np.savetxt( args['filenames_scores'].split('.txt')[0]+str(i)+'.txt',
-                    np.asarray(generate_X_scores( trained_model, X_test[i*train_length/4:(i+1)*train_length/4], 
-                                                  y_test[i*train_length/4:(i+1)*train_length/4], filenames )).transpose(),
+        np.savetxt( args['filenames_scores'].split('.txt')[0]+'_'+set_name+str(i)+'.txt',
+                    np.asarray(generate_X_scores( trained_model, X_test[i*X_length/4:(i+1)*X_length/4], 
+                                                  y_test[i*X_length/4:(i+1)*X_length/4], filenames )).transpose(),
                     fmt='%s %s %s', header='filename score label',comments='' )
     
 
-print 'Time taken:', time.time() - start_time
+print 'Time taken:', time.time() - start_time, ' on testing ', set_name
