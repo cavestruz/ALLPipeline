@@ -194,12 +194,33 @@ class SKPreProcessNormalize(BaseEstimator) :
     def fit( self, images, y = None ) :
         return self
 
-    def transform( self, image ) :
+    def transform( self, images ) :
         from sklearn.preprocessing import normalize
         return np.array( [ normalize(image) for image in images ] )
 
     def fit_transform( self, images, y = None ) :
         return self.transform( images )
+
+class SKPreProcessNormalizeConcatenated(BaseEstimator) :
+    '''For multi-page images'''
+    def __init__( self, normalize = True ) :
+        self.normalize = normalize
+
+    def fit( self, images, y = None ) :
+        return self
+
+    def _normalize_each_page( self, image ) :
+        from sklearn.preprocessing import normalize
+        return np.array( [ normalize( image[i] )
+                           for i in range( image.shape[0] ) ] )
+
+
+    def transform( self, images ) :
+        return np.array( [ self._normalize_each_page(image) for image in images ] )
+
+    def fit_transform( self, images, y = None ) :
+        return self.transform( images )
+
 
 class ConcatenatedHOG(BaseEstimator) :
     '''For multiband training - specific to DES four band.  
@@ -373,6 +394,7 @@ image_processors = { 'median_filter' : MedianSmooth(),
                      'unflatten' : UnFlatten(),
                      'mask_avg_impute' : MaskAverageImpute() ,
                      'sknormalize' : SKPreProcessNormalize(),
+                     'sknormalize_cat' :  SKPreProcessNormalizeConcatenated(),
                      }
 
 
