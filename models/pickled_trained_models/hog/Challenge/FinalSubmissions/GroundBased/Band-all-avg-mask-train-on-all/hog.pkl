@@ -1,0 +1,1 @@
+/home/avestruz/codes/StrongCNN/models/pickled_trained_models/hog/Challenge/GroundBased/Band-all-avg-mask-train-on-all/hog.pkl

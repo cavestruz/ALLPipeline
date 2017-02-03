@@ -1,1 +1,1 @@
-pickled_trained_models/hog/Challenge/FinalSubmissions/GroundBased/Band-all-normalize/hog.pkl
+/home/avestruz/codes/StrongCNN/models/pickled_trained_models/hog/Challenge/FinalSubmissions/GroundBased/Band-all-normalize/hog.pkl
