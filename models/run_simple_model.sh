@@ -1,1 +1,5 @@
-python run_simple_model.py ~/Code/StrongCNN/files/print_all_scores_for_debugging*.txt -C 10000
+cfgdir=$1
+fileglob=$2
+
+
+python run_simple_model.py $cfgdir $fileglob -C 10000
