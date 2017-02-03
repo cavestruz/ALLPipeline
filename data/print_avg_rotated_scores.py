@@ -4,17 +4,17 @@ import pandas as pd
 from StrongCNN.utils.model_info import generate_AUC_fpr_tpr
 
 scoresdir = sys.argv[1] 
-# sub_type = sys.argv[2]
+set_name = sys.argv[2]
 
 def print_ID_and_avg_score( fdir='.', 
-                            outfile1='/avestruz_submission_avg_scores_ordered_by_id.txt', 
-                            outfile2='/avestruz_submission_avg_scores_ordered_by_score.txt', 
-                            outfile3='/print_all_scores_for_debugging.txt',
-                            AUC_file='/rotated_aucs.txt' ) :
+                            outfile1='/avestruz_submission_avg_scores_ordered_by_id_'+set_name+'.txt', 
+                            outfile2='/avestruz_submission_avg_scores_ordered_by_score_'+set_name+'.txt', 
+                            outfile3='/print_all_scores_for_debugging_'+set_name+'.txt',
+                            AUC_file='/rotated_aucs_'+set_name+'.txt' ) :
     '''Create four dataframes, order by id, create new dataframe and print'''
 
     df = {}
-    rotated_scores = glob(fdir+'/filenames_scores?.txt')
+    rotated_scores = glob(fdir+'/filenames_scores_'+set_name+'?.txt')
 
     for rotation in rotated_scores :
         df[rotation] = pd.read_csv( rotation, sep=' ' )
