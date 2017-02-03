@@ -1,0 +1,23 @@
+len(X_test) = 80000
+len(y_test) = 80000
+test filename glob  /data/avestruz/StrongCNN/Challenge/FinalData/GroundBased/Data_KiDS_Big.[23]/Public/Band3/*.fits
+
+Testing model parameter grid:
+midpointsigmaclip__mid_point 'mean'
+
+logistic_regression__C 80.
+
+midpointsigmaclip__normalize 0.
+
+log_positive_definite__shift 1.0
+
+hog__cells_per_block (3, 3)
+
+hog__orientations 6
+
+hog__pixels_per_cell (8, 8)
+
+midpointsigmaclip__sigma_factor -1.
+
+Length of X and y:  80000
+Time taken: 3630.06860185  on testing  test
