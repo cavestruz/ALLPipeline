@@ -1,0 +1,23 @@
+len(X_test) = 8000
+len(y_test) = 8000
+test filename glob /data/avestruz/StrongCNN/Challenge/GroundBased/GroundBasedTraining/unlensed-all/*-1[01]0* /data/avestruz/StrongCNN/Challenge/GroundBased/GroundBasedTraining/lensed-all/*-1[01]0*
+
+Testing model parameter grid:
+logistic_regression__C .1
+
+concatenated_hog__orientations (6,5,6,6)
+
+concatenated_hog__avg_mask 1.
+
+concatenated_hog__pixels_per_cell ((16,16),(16,16),(8,8),(16,16))
+
+concatenated_hog__cells_per_block ((1,1),(4, 4),(3, 3),(3, 3),)
+
+concatenated_hog__strips 1.
+
+False predictions: 
+
+AUC = 0.814234222472
+
+Length of X and y:  8000
+Time taken: 1584.44907904  on testing  test

@@ -1,0 +1,5 @@
+len(X_train) = 80000
+len(y_train) = 80000
+(4, 101, 101)
+train glob  /data/avestruz/StrongCNN/Challenge/GroundBased/GroundBasedTraining/unlensed-all/*-1* /data/avestruz/StrongCNN/Challenge/GroundBased/GroundBasedTraining/lensed-all/*-1*
+Time taken: 9369.11424017

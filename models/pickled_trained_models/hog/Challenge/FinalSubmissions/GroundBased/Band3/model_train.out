@@ -1,0 +1,32 @@
+len(X_train) = 80000
+len(y_train) = 80000
+(101, 101)
+train glob  /data/avestruz/StrongCNN/Challenge/GroundBased/GroundBasedTraining/unlensed-Band3/*-1* /data/avestruz/StrongCNN/Challenge/GroundBased/GroundBasedTraining/lensed-Band3/*-1*
+Time taken: 9423.47688389
+len(X_test) = 80000
+len(y_test) = 80000
+train filename glob /data/avestruz/StrongCNN/Challenge/GroundBased/GroundBasedTraining/unlensed-Band3/*-1* /data/avestruz/StrongCNN/Challenge/GroundBased/GroundBasedTraining/lensed-Band3/*-1*
+
+Testing model parameter grid:
+midpointsigmaclip__mid_point 'mean'
+
+logistic_regression__C 80.
+
+midpointsigmaclip__normalize 0.
+
+log_positive_definite__shift 1.0
+
+hog__cells_per_block (3, 3)
+
+hog__orientations 6
+
+hog__pixels_per_cell (8, 8)
+
+midpointsigmaclip__sigma_factor -1.
+
+False predictions: 
+
+AUC = 0.831244300404
+
+Length of X and y:  80000
+Time taken: 6910.07458806  on testing  train

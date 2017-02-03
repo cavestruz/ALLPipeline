@@ -1,0 +1,1 @@
+/home/avestruz/codes/StrongCNN/models/pickled_trained_models/hog/Challenge/SpaceBased/new_hog_sknorm_train_on_all/hog.pkl

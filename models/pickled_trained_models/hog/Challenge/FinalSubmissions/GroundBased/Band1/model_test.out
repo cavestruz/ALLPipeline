@@ -1,0 +1,27 @@
+len(X_test) = 4000
+len(y_test) = 4000
+test filename glob /data/avestruz/StrongCNN/Challenge/GroundBased/GroundBasedTraining/unlensed-Band1/*-100* /data/avestruz/StrongCNN/Challenge/GroundBased/GroundBasedTraining/lensed-Band1/*-100*
+
+Testing model parameter grid:
+midpointsigmaclip__mid_point 'mean'
+
+logistic_regression__C .5
+
+midpointsigmaclip__normalize 0.
+
+log_positive_definite__shift 1.0
+
+hog__cells_per_block (1, 1)
+
+hog__orientations 6
+
+hog__pixels_per_cell (16,16)
+
+midpointsigmaclip__sigma_factor -1.
+
+False predictions: 
+
+AUC = 0.701957201709
+
+Length of X and y:  4000
+Time taken: 308.946848869

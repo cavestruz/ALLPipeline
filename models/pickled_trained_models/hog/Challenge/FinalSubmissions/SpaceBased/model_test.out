@@ -1,0 +1,23 @@
+len(X_test) = 5588
+len(y_test) = 5588
+test filename glob  /data/avestruz/StrongCNN/Challenge/SpaceBased/SpaceBasedTraining/lensed/*-1[01]0*
+
+Testing model parameter grid:
+midpointsigmaclip__mid_point 'mean'
+
+logistic_regression__C 50.
+
+midpointsigmaclip__normalize 0.
+
+log_positive_definite__shift 1.0
+
+hog__cells_per_block (3, 3)
+
+hog__orientations 3
+
+hog__pixels_per_cell (16,16)
+
+midpointsigmaclip__sigma_factor -1.
+
+Length of X and y:  5588
+Time taken: 58.3751461506  on testing  test
