@@ -61,7 +61,7 @@ def _calc_tpr_fpr( scores, labels ) :
     |    not the intermediate points for constant tpr or fpr.
     '''
     assert( len(scores) == len(labels) )
-    assert( all( scores[i] >= scores[i+1] for i in xrange(len(scores)-1) )  )
+    #assert( all( scores[i] >= scores[i+1] for i in xrange(len(scores)-1) )  )
 
     tpr, fpr = [], []
     num_label1 = float(Counter(labels)[1])
