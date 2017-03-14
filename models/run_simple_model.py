@@ -42,7 +42,7 @@ def pickle_model(pklfile, X, y, log_reg_C=10000.) :
 
 def model_super_scores(pklfile, X, y, IDs, print_auc=True) :
     trained_model = load_model(pklfile)
-    IDs, superscores, y = generate_X_scores( model, X, y, IDs )
+    IDs, superscores, y = generate_X_scores( trained_model, X, y, IDs )
     if print_auc : 
         from sklearn.metrics import roc_auc_score
         print "AUC from superscores: ",roc_auc_score( y, superscores )
@@ -83,12 +83,14 @@ if __name__ == "__main__":
                         required=False )
 
     args = vars(parser.parse_args())
+    cfgdir=args['cfgdir']
 
-
+    print args['pickle_model']
     if args['pickle_model'] is not None :
+        print 'Pickling simple model for 16 components in:'
+        print args['data_files']
         X, y, _ = get_data_component_scores(args['data_files'])
-        print 'Pickling simple model for 16 components'
-        print
+        print 'Got data component scores'
         pickle_model(cfgdir+'/model_16_component.pkl', X, y, log_reg_C=10000.)
         
         print
@@ -102,7 +104,8 @@ if __name__ == "__main__":
     if args['test_model'] is not None :
         X, y, IDs = get_data_component_scores(args['data_files'])
         print 'Scoring simple 16 component model in '+cfgdir
-        print 'on '+args['data_files']
+        print 'on '
+        for f in args['data_files'] : print f
         np.savetxt( cfgdir+'/IDs_scores_16_component.txt',
                     np.asarray(model_super_scores(cfgdir+'/model_16_component.pkl', X, y, IDs)).transpose(),
                     fmt='%s %s %s', header='ID score label')
@@ -110,7 +113,8 @@ if __name__ == "__main__":
 
         X, y, IDs = get_data_avg_scores(args['data_files'])
         print 'Scoring simple average score model in '+cfgdir
-        print 'on '+args['data_files']
+        print 'on '
+        for f in args['data_files'] : print f
         np.savetxt( cfgdir+'/IDs_scores_avg.txt',
                     np.asarray(model_super_scores(cfgdir+'/model_avgscore.pkl', X, y, IDs)).transpose(),
                     fmt='%s %s %s', header='ID score label')

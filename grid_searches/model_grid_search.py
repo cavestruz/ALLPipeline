@@ -10,7 +10,7 @@ import ast, time
 cfg = parse_configfile(sys.argv[1])
 start_time = time.time()
 # Collect training and testing data
-X, y = load_data(cfg['filenames']['non_lens_glob'], 
+X, y, _ = load_data(cfg['filenames']['non_lens_glob'], 
                              cfg['filenames']['lens_glob'])
 
 if 'augment_train_data' in cfg.keys() :

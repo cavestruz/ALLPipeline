@@ -10,7 +10,8 @@ def print_ID_and_avg_score( fdir='.',
                             outfile1='/avestruz_submission_avg_scores_ordered_by_id_'+set_name+'.txt', 
                             outfile2='/avestruz_submission_avg_scores_ordered_by_score_'+set_name+'.txt', 
                             outfile3='/print_all_scores_for_debugging_'+set_name+'.txt',
-                            AUC_file='/rotated_aucs_'+set_name+'.txt' ) :
+                            AUC_file='/rotated_aucs_'+set_name+'.txt',
+                            IDs_regex='\d\d\d\d\d\d') :
     '''Create four dataframes, order by id, create new dataframe and print'''
 
     df = {}
@@ -19,7 +20,7 @@ def print_ID_and_avg_score( fdir='.',
     for rotation in rotated_scores :
         df[rotation] = pd.read_csv( rotation, sep=' ' )
         print df[rotation]
-        df[rotation]['IDs'] = df[rotation]['filename'].str.extract('(\d\d\d\d\d\d)')
+        df[rotation]['IDs'] = df[rotation]['filename'].str.extract(IDs_regex)
         df[rotation].sort_values(by='IDs',inplace=True) 
     
     # append other scores to first
@@ -44,4 +45,5 @@ def print_ID_and_avg_score( fdir='.',
     df[rotated_scores[0]].to_csv( path_or_buf=fdir+outfile2, sep=' ', columns=['IDs', 'scores'], index=False )
 
 print_ID_and_avg_score( fdir=scoresdir,
+                        IDs_regex='lensed\_(\d+)\_'
                         )
