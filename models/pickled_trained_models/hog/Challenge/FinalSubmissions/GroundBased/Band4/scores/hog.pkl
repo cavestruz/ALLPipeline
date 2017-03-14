@@ -1,1 +1,1 @@
-pickled_trained_models/hog/Challenge/FinalSubmissions/GroundBased/Band4/hog.pkl
+../hog.pkl

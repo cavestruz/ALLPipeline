@@ -36,13 +36,13 @@ def write_combined_fits_for_IDs( IDs_directory, IDs_glob, band_directories, comb
 
 def write_data_subset( i ) :
     
-    band_dirs =  ['/data/avestruz/StrongCNN/Challenge/FinalData/GroundBased/Data_KiDS_Big.'+str(i)+'/Public/Band'+str(band)+'/' for band in range(1, 5)  ]
-    #band_dirs =  ['~/Downloads/Data_KiDS_Big.'+str(i)+'/Public/Band'+str(band)+'/' for band in range(1, 5)  ]
+    #band_dirs =  ['/data/avestruz/StrongCNN/Challenge/FinalData/GroundBased/Data_KiDS_Big.'+str(i)+'/Public/Band'+str(band)+'/' for band in range(1, 5)  ]
+    band_dirs =  ['/home/babyostrich/Downloads/Data_KiDS_Big.'+str(i)+'/Public/Band'+str(band)+'/' for band in range(1, 5)  ]
 
     IDs_dir = band_dirs[0]
     IDs_glob = '*'
-    combined_dir = '/data/avestruz/StrongCNN/Challenge/FinalData/GroundBased/combined_bands/'+'Data_KiDS_Big.'+str(i)+'/'
-    #combined_dir = '~/Downloads/combined_bands/'+'Data_KiDS_Big.'+str(i)+'/'
+    #combined_dir = '/data/avestruz/StrongCNN/Challenge/FinalData/GroundBased/combined_bands/'+'Data_KiDS_Big.'+str(i)+'/'
+    combined_dir = '/home/babyostrich/Downloads/combined_bands/'+'Data_KiDS_Big.'+str(i)+'/'
     write_combined_fits_for_IDs( IDs_dir, IDs_glob, band_dirs, combined_dir )
 
 if __name__ == "__main__" :
@@ -50,5 +50,5 @@ if __name__ == "__main__" :
     p = Pool(4)
     p.map(write_data_subset, range(3,10) )
 
-    print "Time taken for ", IDs_dir+IDs_glob, time.time() - time_now
+    print "Time taken ",time.time() - time_now
 
