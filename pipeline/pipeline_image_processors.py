@@ -127,6 +127,28 @@ class LogPositiveDefinite(BaseEstimator) :
     def transform( self, images ) :
         return np.array( [ self._normalize(image) for image in images ] )
 
+class MedianSigmaUpperClip( BaseEstimator ) :
+    '''This is the preprocessing step that Hanjue found best gives the
+    Bolton HST data visible contrast.'''
+    def __init__( self, upper_clip = 13.):
+        '''Lower clips at zero, and upper clips in units of standard deviation'''
+        self.upper_clip = upper_clip
+
+    def fit( self, images, y=None ) :
+        return self
+
+    def _calc_clip_lims( self, image ) :
+        std = np.std(image)
+        median = np.median(image)
+        upper_bound = median + self.upper_clip*std
+        return np.clip(image, 0., upper_bound)
+
+    def transform( self, images ) :
+        return np.array( [ self._calc_clip_lims(image) for image in images ] )
+
+    def fit_transform( self, images, y = None ) :
+        return self.transform( images ) 
+
 class PreprocessHST( BaseEstimator ) :
     '''This is significantly the best set of preprocessing I've found
     for our HST like data.'''
@@ -385,6 +407,7 @@ image_processors = { 'median_filter' : MedianSmooth(),
                      'log_positive_definite' : LogPositiveDefinite(),
                      'scale' : StandardScaler(),
                      'imputer' : Imputer(),
+                     'mediansigmaupperclip' : MedianSigmaUpperClip(),
                      'hst' : PreprocessHST(),
                      'midpointsigmaclip' : MidpointSigmaClip(),
                      'norm' : Norm(),
