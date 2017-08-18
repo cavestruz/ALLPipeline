@@ -19,6 +19,7 @@ parser.add_argument('-c', '--model_coeff_plot_filename', required = False)
 parser.add_argument('-r', '--roc_data_filename', required = False)
 parser.add_argument('-t', '--tpr_filename', required = False) 
 parser.add_argument('-s', '--filenames_scores', required = False ) 
+parser.add_argument('-T', '--time', required = False )
 
 args = vars(parser.parse_args())
 
@@ -27,8 +28,10 @@ set_name = args['set_name']
 
 cfg = parse_configfile(cfgdir)
 
-start_time = time.time()
-
+if args['time'] is not None :  start_time = time.time()
+else :
+    print "Time is not on!"
+    sys.exit()
 assert(set_name in ['test','train'])
 
 # Collect testing data
@@ -97,4 +100,4 @@ if args['filenames_scores'] is not None :
                     fmt='%s %s %s', header='filename score label',comments='' )
     
 
-print 'Time taken:', time.time() - start_time, ' on testing ', set_name
+if args['time'] is not None :  print 'Tested '+set_name+' set.  Time taken:', time.time() - start_time
