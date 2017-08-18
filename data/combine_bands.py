@@ -48,7 +48,7 @@ def write_data_subset( i ) :
 if __name__ == "__main__" :
     from multiprocessing import Pool
     p = Pool(4)
-    p.map(write_data_subset, range(3,11) )
+    p.map(write_data_subset, range(3,10) )
 
     print "Time taken ",time.time() - time_now
 
