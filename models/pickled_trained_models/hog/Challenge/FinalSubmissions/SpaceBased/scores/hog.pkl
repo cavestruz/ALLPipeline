@@ -1,1 +1,0 @@
-pickled_trained_models/hog/Challenge/FinalSubmissions/SpaceBased/hog.pkl
