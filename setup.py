@@ -6,6 +6,7 @@ setup(
     description='Machine Learning Pipeline',
     author='Camille Avestruz, Matthew Lightman, Hanjue Zhu',
     author_email='camille.avestruz@yale.edu',
+    url='https://github.com/cavestruz/ALLPipeline',
     packages=['allpipeline',],
     license='The MIT License',
     long_description=open('README.md').read(),
