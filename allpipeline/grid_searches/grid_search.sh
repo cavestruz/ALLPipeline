@@ -1,0 +1,1 @@
+python model_grid_search.py $1 >& $1/grid_search.out
