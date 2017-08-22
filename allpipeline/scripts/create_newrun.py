@@ -9,7 +9,7 @@ parser=argparse.ArgumentParser(
 
 parser.add_argument('rundirs', type=str, nargs='+', 
                     help='location(s) of new rundirectory(ies) to create.  I recommend you create a separate directory for runs outside of this package')
-parser.add_argument('-s', '--samplesdir', type=str, nargs=1, 
+parser.add_argument('-s', '--samplesdir', type=str, nargs=1, required=True, 
                     help='directory location of the config and pbs submission samples')
 parser.add_argument('-o', '--overwrite', type=bool, nargs=1, default=False,
                     help='if a rundirectory exists, overwrite it.  Make sure to check the directory first.')
@@ -32,7 +32,7 @@ def create_run(rundir) :
 
 def copy_sample_runfiles(rundir, samplesdir=None) :
     if samplesdir is None :
-        samplesdir = args.samplesdir[0]
+       samplesdir = args.samplesdir[0]
     try :
         assert(os.path.exists(samplesdir+'/sample_config.ini'))
     except AssertionError :
