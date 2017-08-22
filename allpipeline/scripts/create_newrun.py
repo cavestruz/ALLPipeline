@@ -4,7 +4,7 @@ import argparse
 
 parser=argparse.ArgumentParser(
     description='''This script creates one or more new runs for training and testing a model.''',
-    epilog='''''',
+    epilog='''Functionality to specify batch queue systems, etc. not added yet''',
     ) 
 
 parser.add_argument('rundirs', type=str, nargs='+', 
