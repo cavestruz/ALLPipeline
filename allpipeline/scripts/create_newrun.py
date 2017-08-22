@@ -7,7 +7,8 @@ parser=argparse.ArgumentParser(
     epilog='''''',
     ) 
 
-parser.add_argument('rundirs', type=str, nargs='+', help='location(s) of new rundirectory(ies) to create')
+parser.add_argument('rundirs', type=str, nargs='+', 
+                    help='location(s) of new rundirectory(ies) to create.  I recommend you create a separate directory for runs outside of this package')
 parser.add_argument('-s', '--samplesdir', type=str, nargs=1, 
                     help='directory location of the config and pbs submission samples')
 parser.add_argument('-o', '--overwrite', type=bool, nargs=1, default=False,
