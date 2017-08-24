@@ -1,4 +1,7 @@
-from distutils.core import setup
+#  See: http://www.siafoo.net/article/77#id10 for more examples                                                                                                                                                     
+from setuptools import setup, find_packages
+
+
 
 setup(
     name='ALLPipeline',
@@ -7,7 +10,7 @@ setup(
     author='Camille Avestruz, Matthew Lightman, Hanjue Zhu',
     author_email='camille.avestruz@yale.edu',
     url='https://github.com/cavestruz/ALLPipeline',
-    packages=['allpipeline',],
+    packages=find_packages(),
     license='The MIT License',
     long_description=open('README.md').read(),
 )
