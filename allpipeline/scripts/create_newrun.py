@@ -45,6 +45,16 @@ def copy_sample_runfiles(rundir, samplesdir=None) :
     shutil.copy(sample_pbs, rundir)
 
 
+def get_absolute_path_for_script(rundir) :
+    '''Get the absolute path for this directory, and use that to get the absolute path for generate_train.py,
+    append this to the sample_pbs in rundir
+    See for an example :
+    https://stackoverflow.com/questions/31258561/get-current-directory-python
+
+    '''
+    pass
+
+
 if __name__ == '__main__' :
     for rundir in args.rundirs :
         create_run(rundir) 
