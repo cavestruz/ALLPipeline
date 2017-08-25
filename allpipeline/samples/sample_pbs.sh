@@ -15,5 +15,5 @@ cd $PBS_O_WORKDIR
 #   Need config.ini in PBS_O_WORKDIR for this to work	#
 #########################################################
 
-./generate_trained_model.py $PBS_O_WORKDIR 
+python $(pwd)/../models/generate_trained_model.py $PBS_O_WORKDIR 
 

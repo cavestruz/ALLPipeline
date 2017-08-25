@@ -1,8 +1,8 @@
 import sys, ast
-from IO.config_parser import parse_configfile
-from IO.load_images import load_data
-from IO.augment_data import augment_methods, augment_data
-from pipeline.build_pipeline import build_pipeline
+from allpipeline.IO.config_parser import parse_configfile
+from allpipeline.IO.load_images import load_data
+from allpipeline.IO.augment_data import augment_methods, augment_data
+from allpipeline.pipeline.build_pipeline import build_pipeline
 from _tools import train_model, dump_model
 import time
 
@@ -23,9 +23,6 @@ if 'augment_train_data' in cfg.keys() :
     
 print "len(X_train) =", len(X_train)
 print "len(y_train) =", len(y_train)
-
-print X_train[0].shape
-
 
 print "train glob ", cfg['train_filenames']['non_lens_glob'], cfg['train_filenames']['lens_glob']
 
