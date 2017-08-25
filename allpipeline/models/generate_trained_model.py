@@ -1,8 +1,8 @@
 import sys, ast
-from StrongCNN.IO.config_parser import parse_configfile
-from StrongCNN.IO.load_images import load_data
-from StrongCNN.IO.augment_data import augment_methods, augment_data
-from StrongCNN.pipeline.build_pipeline import build_pipeline
+from IO.config_parser import parse_configfile
+from IO.load_images import load_data
+from IO.augment_data import augment_methods, augment_data
+from pipeline.build_pipeline import build_pipeline
 from _tools import train_model, dump_model
 import time
 
