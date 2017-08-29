@@ -1,4 +1,6 @@
 import ast, sys, time
+sys.path = filter (lambda a: not a.startswith('/home/hanjuezhu/.local'), sys.path)
+#sys.path.remove("/home/hanjuezhu/.local/lib/python2.7/site-packages")
 import argparse
 import numpy as np
 from allpipeline.IO.config_parser import parse_configfile
@@ -28,10 +30,8 @@ set_name = args['set_name']
 
 cfg = parse_configfile(cfgdir)
 
-if args['time'] is not None :  start_time = time.time()
-else :
-    print "Time is not on!"
-    sys.exit()
+start_time = time.time()
+    
 assert(set_name in ['test','train'])
 
 # Collect testing data

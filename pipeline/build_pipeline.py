@@ -1,6 +1,6 @@
 from sklearn.pipeline import Pipeline
-from StrongCNN.pipeline.pipeline_image_processors import image_processors
-from StrongCNN.pipeline.pipeline_classifiers import classifiers
+from pipeline.pipeline_image_processors import image_processors
+from pipeline.pipeline_classifiers import classifiers
 
 def build_pipeline(image_processor_labels, classifier_label) :
     '''
