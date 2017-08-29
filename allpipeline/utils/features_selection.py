@@ -61,15 +61,11 @@ def _calc_tpr_fpr( scores, labels ) :
     |    not the intermediate points for constant tpr or fpr.
     '''
     assert( len(scores) == len(labels) )
-<<<<<<< HEAD
     try :
         assert( all( scores[i] >= scores[i+1] for i in xrange(len(scores)-1) )  )
     except AssertionError :
         print "scores not descending", scores
         exit(1)
-=======
-    #assert( all( scores[i] >= scores[i+1] for i in xrange(len(scores)-1) )  )
->>>>>>> 99f7fa7bc1865455c7814a60ec53ea7258cac322
 
     tpr, fpr = [], []
     num_label1 = float(Counter(labels)[1])
