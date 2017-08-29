@@ -1,11 +1,11 @@
 import ast, sys, time
 import argparse
 import numpy as np
-from StrongCNN.IO.config_parser import parse_configfile
-from StrongCNN.IO.load_images import load_data
-from StrongCNN.IO.augment_data import augment_data
-from StrongCNN.utils.model_info import roc_auc, roc_curve_plot, get_scores
-from StrongCNN.utils.model_info import model_coeff_plot
+from allpipeline.IO.config_parser import parse_configfile
+from allpipeline.IO.load_images import load_data
+from allpipeline.IO.augment_data import augment_data
+from allpipeline.utils.model_info import roc_auc, roc_curve_plot, get_scores
+from allpipeline.utils.model_info import model_coeff_plot
 from _tools import generate_X_y, load_model, get_false_predictions_list, get_filenames_in_threshold_range, generate_X_scores
 
 '''
