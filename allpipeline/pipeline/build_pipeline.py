@@ -9,7 +9,7 @@ def build_pipeline(image_processor_labels, classifier_label) :
     |   image processing step(s) and a classifier
     |
     '''
-
+    print "Building pipeline..."
     estimators = []
     for label in image_processor_labels :
         estimators.append((label, image_processors[label]))

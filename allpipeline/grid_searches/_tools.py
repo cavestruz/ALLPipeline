@@ -2,6 +2,7 @@ import numpy as np
 import sys
 
 def build_parameter_grid( param_grid ) :
+    print "Building the parameter grid..."
     import ast
     return [ {k: ast.literal_eval(v) for k,v in param_grid.iteritems()} ]
 
