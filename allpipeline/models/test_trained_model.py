@@ -1,11 +1,13 @@
 import ast, sys, time
+sys.path = filter (lambda a: not a.startswith('/home/hanjuezhu/.local'), sys.path)
+#sys.path.remove("/home/hanjuezhu/.local/lib/python2.7/site-packages")
 import argparse
 import numpy as np
-from StrongCNN.IO.config_parser import parse_configfile
-from StrongCNN.IO.load_images import load_data
-from StrongCNN.IO.augment_data import augment_data
-from StrongCNN.utils.model_info import roc_auc, roc_curve_plot, get_scores
-from StrongCNN.utils.model_info import model_coeff_plot
+from allpipeline.IO.config_parser import parse_configfile
+from allpipeline.IO.load_images import load_data
+from allpipeline.IO.augment_data import augment_data
+from allpipeline.utils.model_info import roc_auc, roc_curve_plot, get_scores
+from allpipeline.utils.model_info import model_coeff_plot
 from _tools import generate_X_y, load_model, get_false_predictions_list, get_filenames_in_threshold_range, generate_X_scores
 
 '''
@@ -28,10 +30,8 @@ set_name = args['set_name']
 
 cfg = parse_configfile(cfgdir)
 
-if args['time'] is not None :  start_time = time.time()
-else :
-    print "Time is not on!"
-    sys.exit()
+start_time = time.time()
+    
 assert(set_name in ['test','train'])
 
 # Collect testing data
