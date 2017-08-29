@@ -8,9 +8,9 @@ import numpy as np
 import glob
 import cPickle as pickle
 import time
-from IO.load_images import load_data
-from utils.features_selection import get_false_predictions_list, get_filenames_in_threshold_range
-from utils.model_info import get_scores
+from allpipeline.IO.load_images import load_data
+from allpipeline.utils.features_selection import get_false_predictions_list, get_filenames_in_threshold_range
+from allpipeline.utils.model_info import get_scores
 
 def train_model(model_pipeline, X_train, y_train, **params) :
     '''
