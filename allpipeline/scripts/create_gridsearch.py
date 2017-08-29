@@ -34,12 +34,12 @@ def copy_sample_runfiles(rundir, samplesdir=None) :
     if samplesdir is None :
        samplesdir = args.samplesdir[0]
     try :
-        assert(os.path.exists(samplesdir+'/sample_config.ini'))
+        assert(os.path.exists(samplesdir+'/config.ini'))
     except AssertionError :
         print 'invalid argument for samplesdir ', args.samplesdir
 
     
-    sample_config = samplesdir+'/sample_gridsearch_config.ini'
+    sample_config = samplesdir+'/config.ini'
     sample_pbs = samplesdir+'/sample_gridsearch_pbs.sh'
     shutil.copy(sample_config, rundir)
     shutil.copy(sample_pbs, rundir)
